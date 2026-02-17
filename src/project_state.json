@@ -1,0 +1,230 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 9,
+  "summary": "Android native offline reminder app for consórcio sellers to manage client boleto due dates, trigger full-screen alarm notifications, provide quick WhatsApp contact and simple dashboard, plus a simple offline CRM module to manage leads with reminders.",
+  "architectural_notes": [
+    "Target platform: native Android, compatible with Android 8+",
+    "Offline-first: no internet dependency; persistence via local SQLite database",
+    "Reminder delivery requires full-screen notification and audible alarm with actionable options (sent/snooze hours/snooze 1 day)",
+    "Navigation constraint: at most three main screens; optimized for fast use by external sellers",
+    "Branding/design constraint: Honda palette (#E60012 red, white, black); modern minimal UI with large buttons",
+    "App language: Portuguese (pt-BR) should be the default UI language",
+    "Include a simple offline CRM (lead pipeline/lead list) with reminder/follow-up scheduling integrated into the existing reminder/notification system."
+  ],
+  "known_issues": [
+    "Build/deployment process encountered an error during deployment (details not provided)."
+  ],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-build-an-offline-first-web-application-named-lembrete-cons-rcio-pro-optimized-for-android-phones-android-8-via-mobile-browser-focused-on-fast-usage-and-full-functionality-without-internet-connection",
+      "title": "Build an offline-first web application named “Lembrete Consórcio Pro” optimized for Android phones (Android 8+ via mobile browser), focused on fast usage and full functionality without internet connection.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-local-only-data-model-for-clients-with-fields-name-phone-boleto-due-date-installment-value-notes-and-boleto-status-pending-sent-persisted-on-device-browser-storage-suitable-for-offline-use",
+      "title": "Implement a local-only data model for clients with fields: name, phone, boleto due date, installment value, notes, and boleto status (Pending/Sent), persisted on-device (browser storage suitable for offline use).",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-provide-a-direct-whatsapp-action-for-each-client-phone-number-that-opens-a-whatsapp-chat-using-a-deep-link",
+      "title": "Provide a direct WhatsApp action for each client phone number that opens a WhatsApp chat using a deep link.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-the-main-screen-showing-a-due-date-organized-list-grouped-into-due-today-due-tomorrow-next-days-and-overdue-with-filters-to-view-pending-only-sent-only-resolved-or-all",
+      "title": "Create the main screen showing a due-date organized list grouped into: Due Today, Due Tomorrow, Next Days, and Overdue, with filters to view Pending only, Sent only (resolved), or All.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-simple-dashboard-panel-that-shows-count-of-boletos-due-today-count-of-overdue-boletos-and-total-value-to-receive-in-the-current-month-sum-of-installment-values-for-items-due-in-the-month",
+      "title": "Add a simple dashboard panel that shows: count of boletos due today, count of overdue boletos, and total value to receive in the current month (sum of installment values for items due in the month).",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-due-date-reminders-that-trigger-on-the-scheduled-day-with-an-in-app-full-screen-alert-when-the-app-is-open-including-an-audible-alarm-and-provide-actions-mark-as-sent-snooze-for-a-few-hours-snooze-for-one-day",
+      "title": "Implement due-date reminders that trigger on the scheduled day with an in-app full-screen alert when the app is open, including an audible alarm, and provide actions: Mark as Sent, Snooze for a few hours, Snooze for one day.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-limit-navigation-to-a-maximum-of-three-main-screens-1-home-dashboard-grouped-list-2-client-add-edit-3-settings-backup",
+      "title": "Limit navigation to a maximum of three main screens: (1) Home (dashboard + grouped list), (2) Client Add/Edit, (3) Settings/Backup.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-manual-backup-export-that-works-fully-offline-allowing-users-to-export-stored-data-to-a-spreadsheet-format-and-to-a-pdf-document",
+      "title": "Add manual backup/export that works fully offline, allowing users to export stored data to a spreadsheet format and to a PDF document.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-apply-a-modern-minimalist-ui-using-honda-brand-colors-red-e60012-white-and-black-use-large-buttons-and-layouts-optimized-for-quick-use-by-an-external-seller",
+      "title": "Apply a modern, minimalist UI using Honda brand colors: red #E60012, white, and black; use large buttons and layouts optimized for quick use by an external seller.",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-capture-and-display-the-full-deployment-build-error-output-frontend-build-motoko-canister-compilation-dfx-deploy-in-the-deployment-logs-so-the-failing-step-and-exact-error-message-are-visible",
+      "title": "Capture and display the full deployment/build error output (frontend build + Motoko canister compilation + dfx deploy) in the deployment logs so the failing step and exact error message are visible.",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-the-underlying-build-deployment-issue-so-the-project-compiles-and-deploys-successfully-using-the-standard-project-deployment-flow",
+      "title": "Fix the underlying build/deployment issue so the project compiles and deploys successfully using the standard project deployment flow.",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-make-portuguese-pt-br-the-default-language-for-all-user-visible-ui-text-in-the-frontend-including-the-landing-page-content-and-the-diagnostics-panel-ui-also-set-the-document-language-to-pt-br",
+      "title": "Make Portuguese (pt-BR) the default language for all user-visible UI text in the frontend, including the landing page content and the diagnostics panel UI; also set the document language to pt-BR.",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-an-offline-first-crm-module-to-manage-leads-persisted-locally-on-the-device-browser-storage-separate-from-existing-client-boleto-items",
+      "title": "Add an offline-first CRM module to manage leads, persisted locally on the device (browser storage), separate from existing client/boleto items.",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-define-a-lead-data-model-suitable-for-follow-up-tracking-including-at-minimum-name-phone-notes-lead-status-and-next-follow-up-date-time",
+      "title": "Define a lead data model suitable for follow-up tracking, including at minimum: name, phone, notes, lead status, and next follow-up date/time.",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-provide-a-leads-list-view-with-fast-filtering-and-sorting-for-follow-up-work-e-g-overdue-follow-ups-due-today-upcoming-and-no-follow-up-scheduled",
+      "title": "Provide a leads list view with fast filtering and sorting for follow-up work (e.g., overdue follow-ups, due today, upcoming, and no follow-up scheduled).",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-lead-follow-up-reminders-that-trigger-when-a-lead-s-follow-up-date-time-is-reached-showing-an-in-app-full-screen-alert-when-the-app-is-open-with-actions-to-mark-as-done-reschedule-snooze",
+      "title": "Add lead follow-up reminders that trigger when a lead’s follow-up date/time is reached, showing an in-app full-screen alert when the app is open, with actions to mark as done/reschedule (snooze).",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-provide-a-direct-whatsapp-action-for-each-lead-phone-number-that-opens-a-whatsapp-chat-using-a-deep-link-consistent-with-existing-whatsapp-behavior-for-clients",
+      "title": "Provide a direct WhatsApp action for each lead phone number that opens a WhatsApp chat using a deep link, consistent with existing WhatsApp behavior for clients.",
+      "reqIds": [
+        "REQ-17"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-integrate-the-leads-crm-ui-into-the-existing-navigation-while-keeping-the-app-limited-to-a-maximum-of-three-main-screens",
+      "title": "Integrate the Leads CRM UI into the existing navigation while keeping the app limited to a maximum of three main screens.",
+      "reqIds": [
+        "REQ-18"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Create native Android app “Lembrete Consórcio Pro” focused on simplicity, speed, and 100% offline operation (Android 8+)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Client registration: name, phone with direct WhatsApp chat button, boleto due date, installment value, notes, and status (sent/pending)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Automatic reminders on due date with full-screen notification + audible alarm; actions: mark as sent, snooze a few hours, snooze one day",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Main screen list grouped by due dates (today, tomorrow, next days, overdue) with filters (pending/resolved/all)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Simple dashboard panel: count due today, count overdue, and total value to receive in the month",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Local data storage using SQLite to support fully offline usage; lightweight and fast",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Manual backup/export of data to PDF or spreadsheet format",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "UI design: Honda colors (red #E60012, white, black), modern minimal layout, large buttons, simple navigation with max three main screens",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Localize the app UI to Portuguese (pt-BR) as the default language",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Add an offline CRM feature: lead management (controle de leads) with reminders/follow-up alerts",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Lembrete Consórcio Pro",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

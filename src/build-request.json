@@ -1,0 +1,126 @@
+{
+  "kind": "build_request",
+  "title": "Add offline CRM lead management with reminders",
+  "projectName": "Lembrete Consórcio Pro",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-13",
+      "text": "Add an offline-first CRM module to manage leads, persisted locally on the device (browser storage), separate from existing client/boleto items.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "quero adicionar a função de crm, controle de leads com lembretes"
+        ]
+      },
+      "acceptanceCriteria": [
+        "User can create, edit, and delete lead records while offline and data remains after page refresh/reopen.",
+        "Leads are stored locally (no backend dependency required to use the CRM)."
+      ]
+    },
+    {
+      "id": "REQ-14",
+      "text": "Define a lead data model suitable for follow-up tracking, including at minimum: name, phone, notes, lead status, and next follow-up date/time.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "quero adicionar a função de crm, controle de leads com lembretes"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Lead create/edit form validates required fields (at least name and status) and allows setting an optional next follow-up date/time.",
+        "Lead status can be changed from the UI and is persisted locally."
+      ]
+    },
+    {
+      "id": "REQ-15",
+      "text": "Provide a leads list view with fast filtering and sorting for follow-up work (e.g., overdue follow-ups, due today, upcoming, and no follow-up scheduled).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "quero adicionar a função de crm, controle de leads com lembretes"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Leads can be viewed grouped or filtered by follow-up timing: Overdue, Due Today, Upcoming, and No Follow-up.",
+        "The list supports quick search by lead name and/or phone.",
+        "Tapping a lead opens the lead edit/details UI."
+      ]
+    },
+    {
+      "id": "REQ-16",
+      "text": "Add lead follow-up reminders that trigger when a lead’s follow-up date/time is reached, showing an in-app full-screen alert when the app is open, with actions to mark as done/reschedule (snooze).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "quero adicionar a função de crm, controle de leads com lembretes"
+        ]
+      },
+      "acceptanceCriteria": [
+        "When the app is open and the follow-up time is reached (or overdue), the app shows a full-screen reminder for that lead.",
+        "The reminder provides actions to (1) mark the follow-up as completed (clearing or moving the next follow-up), and (2) snooze/reschedule by a selectable short interval and by 1 day.",
+        "Reminder actions persist locally and update the lead’s next follow-up state accordingly."
+      ]
+    },
+    {
+      "id": "REQ-17",
+      "text": "Provide a direct WhatsApp action for each lead phone number that opens a WhatsApp chat using a deep link, consistent with existing WhatsApp behavior for clients.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "quero adicionar a função de crm, controle de leads com lembretes"
+        ]
+      },
+      "acceptanceCriteria": [
+        "From the lead list and/or lead details, the user can tap a WhatsApp button that opens a WhatsApp chat for the lead’s phone number."
+      ]
+    },
+    {
+      "id": "REQ-18",
+      "text": "Integrate the Leads CRM UI into the existing navigation while keeping the app limited to a maximum of three main screens.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "quero adicionar a função de crm, controle de leads com lembretes"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The app still has no more than three main screens, with Leads accessible without adding a fourth top-level screen (e.g., via a segment/tab within an existing screen).",
+        "Leads creation/editing is reachable within the existing screen structure and works well on Android phone layouts."
+      ]
+    }
+  ],
+  "constraints": [
+    "Keep all user-facing UI text in the app consistent with the existing pt-BR localization approach (do not introduce new English UI strings in the product UI).",
+    "Do not edit files under frontend/src/components/ui (compose existing UI components instead).",
+    "Do not modify any files listed as immutable in SYSTEM_CONTEXT.",
+    "Backend remains single-actor (backend/main.mo); only add backend methods if strictly required for this CRM feature (the CRM must work offline regardless)."
+  ],
+  "nonGoals": [
+    "Implementing multi-user, cloud sync, or cross-device synchronization for CRM leads.",
+    "Adding third-party CRM integrations or external databases.",
+    "Adding push notifications or background notifications (reminders only need to work when the app is open, consistent with existing reminder approach)."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

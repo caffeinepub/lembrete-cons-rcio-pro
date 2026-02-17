@@ -1,0 +1,126 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-add-an-offline-first-crm-module-to-manage-leads-persisted-locally-on-the-device-browser-storage-separate-from-existing-client-boleto-items",
+      "featureTitle": "Add an offline-first CRM module to manage leads, persisted locally on the device (browser storage), separate from existing client/boleto items.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/features/leads/hooks/useLeads.ts",
+        "frontend/src/features/leads/storage/leadsStorage.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-13"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-define-a-lead-data-model-suitable-for-follow-up-tracking-including-at-minimum-name-phone-notes-lead-status-and-next-follow-up-date-time",
+      "featureTitle": "Define a lead data model suitable for follow-up tracking, including at minimum: name, phone, notes, lead status, and next follow-up date/time.",
+      "files": [
+        "frontend/src/features/leads/components/LeadDetails.tsx",
+        "frontend/src/features/leads/components/LeadForm.tsx",
+        "frontend/src/features/leads/model/lead.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-14"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-provide-a-leads-list-view-with-fast-filtering-and-sorting-for-follow-up-work-e-g-overdue-follow-ups-due-today-upcoming-and-no-follow-up-scheduled",
+      "featureTitle": "Provide a leads list view with fast filtering and sorting for follow-up work (e.g., overdue follow-ups, due today, upcoming, and no follow-up scheduled).",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/features/leads/components/LeadsList.tsx",
+        "frontend/src/features/leads/components/LeadsModule.tsx",
+        "frontend/src/features/leads/utils/followUpBuckets.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-15"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-lead-follow-up-reminders-that-trigger-when-a-lead-s-follow-up-date-time-is-reached-showing-an-in-app-full-screen-alert-when-the-app-is-open-with-actions-to-mark-as-done-reschedule-snooze",
+      "featureTitle": "Add lead follow-up reminders that trigger when a lead’s follow-up date/time is reached, showing an in-app full-screen alert when the app is open, with actions to mark as done/reschedule (snooze).",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/features/leads/components/LeadReminderOverlay.tsx",
+        "frontend/src/features/leads/reminders/useLeadReminders.ts",
+        "frontend/src/features/leads/utils/snoozeOptions.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-16"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-provide-a-direct-whatsapp-action-for-each-lead-phone-number-that-opens-a-whatsapp-chat-using-a-deep-link-consistent-with-existing-whatsapp-behavior-for-clients",
+      "featureTitle": "Provide a direct WhatsApp action for each lead phone number that opens a WhatsApp chat using a deep link, consistent with existing WhatsApp behavior for clients.",
+      "files": [
+        "frontend/src/features/leads/components/LeadDetails.tsx",
+        "frontend/src/features/leads/components/LeadsList.tsx",
+        "frontend/src/features/leads/utils/whatsapp.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-17"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-integrate-the-leads-crm-ui-into-the-existing-navigation-while-keeping-the-app-limited-to-a-maximum-of-three-main-screens",
+      "featureTitle": "Integrate the Leads CRM UI into the existing navigation while keeping the app limited to a maximum of three main screens.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/features/leads/components/LeadsModule.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-18"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

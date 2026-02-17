@@ -1,0 +1,130 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-17T13:07:56.355Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 6,
+    "implemented": 6,
+    "items": [
+      {
+        "id": "REQ-13",
+        "summary": "Add an offline-first CRM module to manage leads, persisted locally on the device (browser storage), separate from existing client/boleto items.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/features/leads/storage/leadsStorage.ts",
+          "frontend/src/features/leads/hooks/useLeads.ts",
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/features/leads/storage/leadsStorage.ts",
+          "frontend/src/features/leads/hooks/useLeads.ts",
+          "frontend/src/App.tsx"
+        ]
+      },
+      {
+        "id": "REQ-14",
+        "summary": "Define a lead data model suitable for follow-up tracking, including at minimum: name, phone, notes, lead status, and next follow-up date/time.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/features/leads/model/lead.ts",
+          "frontend/src/features/leads/components/LeadForm.tsx",
+          "frontend/src/features/leads/components/LeadDetails.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/features/leads/model/lead.ts",
+          "frontend/src/features/leads/components/LeadForm.tsx",
+          "frontend/src/features/leads/components/LeadDetails.tsx"
+        ]
+      },
+      {
+        "id": "REQ-15",
+        "summary": "Provide a leads list view with fast filtering and sorting for follow-up work (e.g., overdue follow-ups, due today, upcoming, and no follow-up scheduled).",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/features/leads/utils/followUpBuckets.ts",
+          "frontend/src/features/leads/components/LeadsList.tsx",
+          "frontend/src/features/leads/components/LeadsModule.tsx",
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/features/leads/utils/followUpBuckets.ts",
+          "frontend/src/features/leads/components/LeadsList.tsx",
+          "frontend/src/features/leads/components/LeadsModule.tsx",
+          "frontend/src/App.tsx"
+        ]
+      },
+      {
+        "id": "REQ-16",
+        "summary": "Add lead follow-up reminders that trigger when a lead’s follow-up date/time is reached, showing an in-app full-screen alert when the app is open, with actions to mark as done/reschedule (snooze).",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/features/leads/reminders/useLeadReminders.ts",
+          "frontend/src/features/leads/components/LeadReminderOverlay.tsx",
+          "frontend/src/features/leads/utils/snoozeOptions.ts",
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/features/leads/reminders/useLeadReminders.ts",
+          "frontend/src/features/leads/components/LeadReminderOverlay.tsx",
+          "frontend/src/features/leads/utils/snoozeOptions.ts",
+          "frontend/src/App.tsx"
+        ]
+      },
+      {
+        "id": "REQ-17",
+        "summary": "Provide a direct WhatsApp action for each lead phone number that opens a WhatsApp chat using a deep link, consistent with existing WhatsApp behavior for clients.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/features/leads/utils/whatsapp.ts",
+          "frontend/src/features/leads/components/LeadsList.tsx",
+          "frontend/src/features/leads/components/LeadDetails.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/features/leads/utils/whatsapp.ts",
+          "frontend/src/features/leads/components/LeadsList.tsx",
+          "frontend/src/features/leads/components/LeadDetails.tsx"
+        ]
+      },
+      {
+        "id": "REQ-18",
+        "summary": "Integrate the Leads CRM UI into the existing navigation while keeping the app limited to a maximum of three main screens.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/App.tsx",
+          "frontend/src/features/leads/components/LeadsModule.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/App.tsx",
+          "frontend/src/features/leads/components/LeadsModule.tsx"
+        ]
+      }
+    ]
+  },
+  "changedFiles": [
+    "build-request.json",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/src/App.tsx",
+    "frontend/src/features/leads/components/LeadDetails.tsx",
+    "frontend/src/features/leads/components/LeadForm.tsx",
+    "frontend/src/features/leads/components/LeadReminderOverlay.tsx",
+    "frontend/src/features/leads/components/LeadsList.tsx",
+    "frontend/src/features/leads/components/LeadsModule.tsx",
+    "frontend/src/features/leads/hooks/useLeads.ts",
+    "frontend/src/features/leads/model/lead.ts",
+    "frontend/src/features/leads/reminders/useLeadReminders.ts",
+    "frontend/src/features/leads/storage/leadsStorage.ts",
+    "frontend/src/features/leads/utils/followUpBuckets.ts",
+    "frontend/src/features/leads/utils/snoozeOptions.ts",
+    "frontend/src/features/leads/utils/whatsapp.ts",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}

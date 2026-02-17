@@ -1,0 +1,163 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Add offline CRM lead management with reminders (frontend-only)",
+  "requirements": [
+    {
+      "id": "REQ-13",
+      "summary": "Adicionar módulo CRM de Leads offline-first com persistência local separada do restante do app",
+      "acceptanceCriteria": [
+        "User can create, edit, and delete lead records while offline and data remains after page refresh/reopen.",
+        "Leads are stored locally (no backend dependency required to use the CRM)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/features/leads/storage/leadsStorage.ts",
+          "operation": "create",
+          "description": "Implementar persistência local (ex.: localStorage) para leads (carregar/salvar/atualizar/remover) com chave dedicada para manter separado de outros itens do app."
+        },
+        {
+          "path": "frontend/src/features/leads/hooks/useLeads.ts",
+          "operation": "create",
+          "description": "Criar hook para CRUD de leads offline usando leadsStorage, expondo operações e estado para a UI."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Integrar o módulo de Leads (UI e estado) no app sem dependência do backend, garantindo que funcione offline e mantenha dados após recarregar."
+        }
+      ]
+    },
+    {
+      "id": "REQ-14",
+      "summary": "Definir modelo de dados de Lead e formulário de criação/edição com validação e status persistido",
+      "acceptanceCriteria": [
+        "Lead create/edit form validates required fields (at least name and status) and allows setting an optional next follow-up date/time.",
+        "Lead status can be changed from the UI and is persisted locally."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/features/leads/model/lead.ts",
+          "operation": "create",
+          "description": "Definir o tipo/modelo de Lead com campos mínimos: nome, telefone, observações, status e próxima data/hora de follow-up (opcional), além de metadados necessários para lembretes locais."
+        },
+        {
+          "path": "frontend/src/features/leads/components/LeadForm.tsx",
+          "operation": "create",
+          "description": "Criar formulário de criar/editar Lead com validação (nome e status obrigatórios) e campo opcional de próxima data/hora. Usar componentes do shadcn-ui (ex.: Input, Textarea, Select, Dialog/Drawer) para UI consistente. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/features/leads/components/LeadDetails.tsx",
+          "operation": "create",
+          "description": "Criar UI de detalhes/edição do lead (pode reutilizar LeadForm) incluindo alteração de status e salvamento local. Usar componentes do shadcn-ui para ações e layout responsivo. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-15",
+      "summary": "Criar lista de leads com filtros rápidos, ordenação e busca para trabalho de follow-up",
+      "acceptanceCriteria": [
+        "Leads can be viewed grouped or filtered by follow-up timing: Overdue, Due Today, Upcoming, and No Follow-up.",
+        "The list supports quick search by lead name and/or phone.",
+        "Tapping a lead opens the lead edit/details UI."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/features/leads/utils/followUpBuckets.ts",
+          "operation": "create",
+          "description": "Implementar utilitários para classificar leads por timing de follow-up (Atrasados, Hoje, Próximos, Sem follow-up) e para ordenação por data/hora e nome."
+        },
+        {
+          "path": "frontend/src/features/leads/components/LeadsList.tsx",
+          "operation": "create",
+          "description": "Criar lista de leads com busca rápida (nome/telefone), filtros por buckets de follow-up e ordenação adequada para follow-up. Usar componentes do shadcn-ui (ex.: Tabs/Segmented, Input, Badge, Card, ScrollArea) para UX em Android. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/features/leads/components/LeadsModule.tsx",
+          "operation": "create",
+          "description": "Compor a experiência do CRM (lista + abertura de detalhes/edição) em um único módulo navegável dentro da tela existente, evitando novas telas principais."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire do LeadsModule na estrutura atual do app, garantindo que tocar em um lead abra a UI de detalhes/edição dentro do mesmo contexto de navegação."
+        }
+      ]
+    },
+    {
+      "id": "REQ-16",
+      "summary": "Adicionar lembretes de follow-up em tela cheia quando o app estiver aberto, com ações concluir e sonecar/reagendar",
+      "acceptanceCriteria": [
+        "When the app is open and the follow-up time is reached (or overdue), the app shows a full-screen reminder for that lead.",
+        "The reminder provides actions to (1) mark the follow-up as completed (clearing or moving the next follow-up), and (2) snooze/reschedule by a selectable short interval and by 1 day.",
+        "Reminder actions persist locally and update the lead’s next follow-up state accordingly."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/features/leads/reminders/useLeadReminders.ts",
+          "operation": "create",
+          "description": "Criar hook para monitorar (polling/timer) leads com follow-up vencido/atingido enquanto o app está aberto e expor o lead ativo para o alerta em tela cheia; atualizar o estado via useLeads e persistir localmente."
+        },
+        {
+          "path": "frontend/src/features/leads/components/LeadReminderOverlay.tsx",
+          "operation": "create",
+          "description": "Criar alerta em tela cheia (modal/overlay) exibindo o lead a ser seguido e ações: 'Concluir' e 'Sonecar/Reagendar' (intervalos curtos e +1 dia). Usar componentes do shadcn-ui (ex.: Dialog, Button, Select) para UI e acessibilidade. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/features/leads/utils/snoozeOptions.ts",
+          "operation": "create",
+          "description": "Definir opções de soneca/reagendamento (ex.: 15 min, 30 min, 1 hora, 1 dia) e funções para calcular próxima data/hora, garantindo persistência local após ação."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Montar o sistema de lembretes do CRM no app (overlay global) para que dispare quando o app estiver aberto e haja follow-up vencido/atingido, garantindo que ações atualizem e persistam o lead localmente."
+        }
+      ]
+    },
+    {
+      "id": "REQ-17",
+      "summary": "Adicionar ação direta de WhatsApp por lead usando deep link, consistente com o comportamento atual do app",
+      "acceptanceCriteria": [
+        "From the lead list and/or lead details, the user can tap a WhatsApp button that opens a WhatsApp chat for the lead’s phone number."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/features/leads/utils/whatsapp.ts",
+          "operation": "create",
+          "description": "Criar utilitário para normalizar telefone (somente dígitos/DDD) e gerar deep link do WhatsApp para abrir conversa; manter comportamento consistente com o restante do app."
+        },
+        {
+          "path": "frontend/src/features/leads/components/LeadsList.tsx",
+          "operation": "modify",
+          "description": "Adicionar botão/ação de WhatsApp em cada lead (na lista) chamando o utilitário de deep link e abrindo em nova navegação, com texto pt-BR. Usar componentes do shadcn-ui para botões/ícones. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/features/leads/components/LeadDetails.tsx",
+          "operation": "modify",
+          "description": "Adicionar ação de WhatsApp também na tela de detalhes/edição do lead para acesso rápido, com texto pt-BR. Usar componentes do shadcn-ui. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-18",
+      "summary": "Integrar o CRM de Leads na navegação existente sem ultrapassar 3 telas principais e com boa usabilidade em Android",
+      "acceptanceCriteria": [
+        "The app still has no more than three main screens, with Leads accessible without adding a fourth top-level screen (e.g., via a segment/tab within an existing screen).",
+        "Leads creation/editing is reachable within the existing screen structure and works well on Android phone layouts."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Reorganizar o conteúdo principal para incluir um seletor (aba/segmento) dentro da tela existente (ex.: 'Painel' e 'Leads') mantendo no máximo 3 telas principais; manter Diagnósticos como overlay. Usar componentes do shadcn-ui (ex.: Tabs) se disponível. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/features/leads/components/LeadsModule.tsx",
+          "operation": "modify",
+          "description": "Garantir que criar/editar lead aconteça dentro do fluxo do módulo (ex.: dialog/drawer) sem adicionar uma nova tela principal, com layout responsivo para Android (tamanhos, espaçamentos, rolagem). Usar componentes do shadcn-ui. Verify the component's usage instructions before implementing."
+        }
+      ]
+    }
+  ]
+}
