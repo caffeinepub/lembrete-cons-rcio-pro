@@ -1,0 +1,36 @@
+# Android build outputs
+app/build/
+build/
+*.apk
+*.aab
+
+# Build artifacts directory (for CI collection)
+artifacts/
+
+# Signing keys and credentials (NEVER commit these)
+signing/*.keystore
+signing/*.jks
+signing/keystore.properties
+signing/*.pem
+signing/*.der
+
+# Local configuration
+local.properties
+keystore.properties
+
+# Gradle
+.gradle/
+gradle/
+gradlew
+gradlew.bat
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Generated Android project files
+app/
+gradle.properties
+settings.gradle
+build.gradle

@@ -5,16 +5,32 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DiagnosticsPanel } from '@/components/Debug/DiagnosticsPanel';
 import { LeadsModule } from '@/features/leads/components/LeadsModule';
 import { LeadReminderOverlay } from '@/features/leads/components/LeadReminderOverlay';
-import { useLeads } from '@/features/leads/hooks/useLeads';
+import { LeadsProvider, useLeadsContext } from '@/features/leads/context/LeadsContext';
 import { useLeadReminders } from '@/features/leads/reminders/useLeadReminders';
-import { useBackendStatus } from '@/hooks/useQueries';
+import { DashboardModule } from '@/features/dashboard/components/DashboardModule';
+import { ClientBoletoReminderOverlay } from '@/features/dashboard/components/ClientBoletoReminderOverlay';
+import { ClientBoletosProvider, useClientBoletosContext } from '@/features/dashboard/context/ClientBoletosContext';
+import { useClientBoletoReminders } from '@/features/dashboard/reminders/useClientBoletoReminders';
+import { SettingsModule } from '@/features/settings/SettingsModule';
+import { AccessGate } from '@/features/access/AccessGate';
+import { branding } from '@/config/branding';
+import { useInternetIdentity } from '@/hooks/useInternetIdentity';
+import { LogOut } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
 
-export default function App() {
+function AppContent() {
   const [showDiagnostics, setShowDiagnostics] = useState(false);
   const [activeTab, setActiveTab] = useState('dashboard');
-  const { data: backendStatus } = useBackendStatus();
-  const { leads, snoozeFollowUp, completeFollowUp } = useLeads();
-  const { activeReminder, dismissReminder } = useLeadReminders(leads);
+  const { clear, identity } = useInternetIdentity();
+  const queryClient = useQueryClient();
+  
+  // Leads context and reminders
+  const { leads, snoozeFollowUp, completeFollowUp } = useLeadsContext();
+  const { activeReminder: activeLeadReminder, dismissReminder: dismissLeadReminder } = useLeadReminders(leads);
+  
+  // Client Boletos context and reminders
+  const { clientBoletos, snoozeBoleto, markAsSent } = useClientBoletosContext();
+  const { activeReminder: activeBoletoReminder, dismissReminder: dismissBoletoReminder } = useClientBoletoReminders(clientBoletos);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -23,27 +39,72 @@ export default function App() {
     }
   }, []);
 
-  const handleSnoozeReminder = (minutes: number) => {
-    if (activeReminder) {
-      snoozeFollowUp(activeReminder.id, minutes);
-      dismissReminder();
+  useEffect(() => {
+    // Register service worker for PWA
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('/sw.js')
+        .then((registration) => {
+          console.log('Service Worker registered:', registration);
+        })
+        .catch((error) => {
+          console.error('Service Worker registration failed:', error);
+        });
+    }
+  }, []);
+
+  const handleSnoozeLeadReminder = (minutes: number) => {
+    if (activeLeadReminder) {
+      snoozeFollowUp(activeLeadReminder.id, minutes);
+      dismissLeadReminder();
     }
   };
 
-  const handleCompleteReminder = () => {
-    if (activeReminder) {
-      completeFollowUp(activeReminder.id);
-      dismissReminder();
+  const handleCompleteLeadReminder = () => {
+    if (activeLeadReminder) {
+      completeFollowUp(activeLeadReminder.id);
+      dismissLeadReminder();
     }
+  };
+
+  const handleSnoozeBoletoReminder = (minutes: number) => {
+    if (activeBoletoReminder) {
+      snoozeBoleto(activeBoletoReminder.id, minutes);
+      dismissBoletoReminder();
+    }
+  };
+
+  const handleMarkBoletoAsSent = () => {
+    if (activeBoletoReminder) {
+      markAsSent(activeBoletoReminder.id);
+      dismissBoletoReminder();
+    }
+  };
+
+  const handleLogout = async () => {
+    await clear();
+    queryClient.clear();
   };
 
   return (
     <>
       <div className="min-h-screen bg-background flex flex-col">
         <header className="bg-[#E60012] text-white shadow-lg">
-          <div className="container mx-auto px-4 py-4">
-            <h1 className="text-2xl font-bold">Lembrete Consórcio Pro</h1>
-            <p className="text-sm opacity-90">Sistema de Lembretes e CRM para Consórcio Honda</p>
+          <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold">{branding.appName}</h1>
+              <p className="text-sm opacity-90">{branding.headerSubtitle}</p>
+            </div>
+            {identity && (
+              <Button
+                onClick={handleLogout}
+                variant="ghost"
+                size="sm"
+                className="text-white hover:bg-white/20"
+              >
+                <LogOut className="h-4 w-4" />
+              </Button>
+            )}
           </div>
         </header>
 
@@ -54,69 +115,21 @@ export default function App() {
                 <TabsList className="w-full justify-start">
                   <TabsTrigger value="dashboard">Painel</TabsTrigger>
                   <TabsTrigger value="leads">Leads CRM</TabsTrigger>
+                  <TabsTrigger value="settings">Settings</TabsTrigger>
                 </TabsList>
               </div>
             </div>
 
             <TabsContent value="dashboard" className="flex-1 m-0">
-              <div className="container mx-auto px-4 py-8">
-                <div className="max-w-4xl mx-auto space-y-6">
-                  <div className="bg-card border rounded-lg p-6 shadow-sm">
-                    <h2 className="text-xl font-semibold mb-2">Bem-vindo ao Lembrete Consórcio Pro</h2>
-                    <p className="text-muted-foreground mb-4">
-                      Seu sistema completo de lembretes e CRM para gerenciar clientes de consórcio.
-                    </p>
-                    
-                    <div className="flex items-center gap-2 text-sm">
-                      <div
-                        className={`w-2 h-2 rounded-full ${
-                          backendStatus?.connected ? 'bg-green-500' : 'bg-yellow-500'
-                        }`}
-                      />
-                      <span className="text-muted-foreground">
-                        Backend: {backendStatus?.connected ? 'Conectado' : 'Conectando...'}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div className="bg-card border rounded-lg p-5">
-                      <h3 className="font-semibold mb-2">📅 Gerenciamento de Vencimentos</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Acompanhe datas de vencimento de boletos organizadas por hoje, amanhã, próximos e vencidos.
-                      </p>
-                    </div>
-                    <div className="bg-card border rounded-lg p-5">
-                      <h3 className="font-semibold mb-2">💬 Integração com WhatsApp</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Acesso rápido para contatar clientes diretamente via WhatsApp com um toque.
-                      </p>
-                    </div>
-                    <div className="bg-card border rounded-lg p-5">
-                      <h3 className="font-semibold mb-2">🔔 Lembretes Inteligentes</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Alertas em tela cheia com alarmes sonoros nas datas de vencimento com opções de soneca.
-                      </p>
-                    </div>
-                    <div className="bg-card border rounded-lg p-5">
-                      <h3 className="font-semibold mb-2">👥 CRM de Leads</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Gerencie seus leads com follow-ups automáticos, status e histórico completo.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="bg-muted/50 border border-dashed rounded-lg p-6 text-center">
-                    <p className="text-muted-foreground">
-                      Use a aba "Leads CRM" para começar a gerenciar seus contatos e follow-ups.
-                    </p>
-                  </div>
-                </div>
-              </div>
+              <DashboardModule />
             </TabsContent>
 
             <TabsContent value="leads" className="flex-1 m-0">
               <LeadsModule />
+            </TabsContent>
+
+            <TabsContent value="settings" className="flex-1 m-0">
+              <SettingsModule />
             </TabsContent>
           </Tabs>
         </main>
@@ -125,7 +138,7 @@ export default function App() {
           <div className="container mx-auto px-4 py-6">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               <p className="text-sm text-muted-foreground">
-                © {new Date().getFullYear()} Lembrete Consórcio Pro. Feito com amor usando{' '}
+                © {new Date().getFullYear()} {branding.appName}. Built with love using{' '}
                 <a
                   href={`https://caffeine.ai/?utm_source=Caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(
                     typeof window !== 'undefined' ? window.location.hostname : 'unknown-app'
@@ -153,13 +166,33 @@ export default function App() {
 
       {showDiagnostics && <DiagnosticsPanel onClose={() => setShowDiagnostics(false)} />}
       
-      {activeReminder && (
+      {activeLeadReminder && (
         <LeadReminderOverlay
-          lead={activeReminder}
-          onSnooze={handleSnoozeReminder}
-          onComplete={handleCompleteReminder}
+          lead={activeLeadReminder}
+          onSnooze={handleSnoozeLeadReminder}
+          onComplete={handleCompleteLeadReminder}
+        />
+      )}
+
+      {activeBoletoReminder && (
+        <ClientBoletoReminderOverlay
+          boleto={activeBoletoReminder}
+          onSnooze={handleSnoozeBoletoReminder}
+          onMarkAsSent={handleMarkBoletoAsSent}
         />
       )}
     </>
+  );
+}
+
+export default function App() {
+  return (
+    <AccessGate>
+      <LeadsProvider>
+        <ClientBoletosProvider>
+          <AppContent />
+        </ClientBoletosProvider>
+      </LeadsProvider>
+    </AccessGate>
   );
 }

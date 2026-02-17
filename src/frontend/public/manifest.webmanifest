@@ -1,0 +1,36 @@
+{
+  "name": "Lembrete Consórcio Pro",
+  "short_name": "Consórcio Pro",
+  "description": "Sistema completo de lembretes e CRM para gerenciar clientes de consórcio com follow-ups automáticos",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#E60012",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/assets/generated/app-icon.dim_1024x1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/generated/app-icon.dim_1024x1024.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/generated/app-icon.dim_1024x1024.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/assets/generated/splash.dim_1080x1920.png",
+      "sizes": "1080x1920",
+      "type": "image/png"
+    }
+  ]
+}

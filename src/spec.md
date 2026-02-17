@@ -1,15 +1,16 @@
 # Specification
 
 ## Summary
-**Goal:** Adicionar um módulo de CRM offline-first para controle de leads com lembretes de follow-up, integrado à navegação existente.
+**Goal:** Add restricted access so the app is only usable after an admin manually confirms Pix payment, including user accounts and an admin panel.
 
 **Planned changes:**
-- Criar um módulo de Leads (CRM) com persistência local no dispositivo (armazenamento do navegador), separado dos itens existentes de clientes/boletos.
-- Definir e implementar o modelo de lead com: nome, telefone, observações, status e próxima data/hora de follow-up.
-- Adicionar telas/fluxos de criar, editar e excluir leads, com validação de campos obrigatórios (mínimo: nome e status).
-- Implementar lista de leads com busca rápida (nome/telefone) e filtros/agrupamentos por follow-up: Atrasados, Vence hoje, Próximos e Sem follow-up.
-- Implementar lembretes de follow-up em tela cheia quando o app estiver aberto (incluindo atrasados), com ações para concluir e para adiar/reagendar (intervalos curtos e +1 dia), persistindo as alterações localmente.
-- Adicionar ação direta de WhatsApp por lead via deep link, consistente com o comportamento já existente para clientes.
-- Integrar o CRM de Leads à navegação existente mantendo no máximo três telas principais (ex.: aba/segmento dentro de uma tela já existente), garantindo boa usabilidade em layouts de Android.
+- Implement backend email+password accounts with persisted user records, salted password hashing, and account status fields (payment status and enabled/disabled).
+- Add backend APIs for register/login, fetching current account status, and client logout via local session clearing.
+- Create frontend gating so unauthenticated users only see auth + paywall flow, and logged-in but unapproved/disabled users only see a paywall status screen.
+- Build a paywall screen showing Pix amount/key/instructions (English text) and allowing the user to submit a transaction code and/or upload payment proof for admin review.
+- Add admin-only backend APIs to list users, view payment submissions, approve payments (activate), and enable/disable users, with a defined initial-admin bootstrap mechanism.
+- Add an admin panel UI (admin-only) to review users and submissions, approve payments, and toggle enabled/disabled, updating without full refresh.
+- Update navigation to keep at most three main screens for activated users, integrating admin tools without adding a fourth main screen, and preventing gated users from reaching internal modules.
+- Centralize Pix display values (amount/key/instructions) in a single frontend configuration module.
 
-**User-visible outcome:** O usuário consegue cadastrar e gerenciar leads offline, filtrar rapidamente quem precisa de retorno, receber alertas de follow-up dentro do app (quando aberto) com opções de concluir/adiar, e abrir conversa no WhatsApp direto pelo lead, tudo sem adicionar uma quarta tela principal.
+**User-visible outcome:** Users can register and log in but will only see a Pix paywall/status screen until an admin approves payment and enables their account; admins can review submissions and activate/disable users from an admin-only section in the app.

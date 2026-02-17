@@ -1,0 +1,37 @@
+{
+  "packageId": "com.consorciopro.lembrete",
+  "host": "YOUR_DEPLOYED_PWA_URL_HERE",
+  "name": "Lembrete Consórcio Pro",
+  "launcherName": "Consórcio Pro",
+  "display": "standalone",
+  "themeColor": "#E60012",
+  "navigationColor": "#ffffff",
+  "backgroundColor": "#ffffff",
+  "enableNotifications": false,
+  "startUrl": "/",
+  "iconUrl": "/assets/generated/app-icon.dim_1024x1024.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "./signing/release.keystore",
+    "alias": "consorcio-pro-key"
+  },
+  "appVersionName": "1.0.0",
+  "appVersionCode": 1,
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "/manifest.webmanifest",
+  "fallbackType": "customtabs",
+  "features": {
+    "locationDelegation": {
+      "enabled": false
+    },
+    "playBilling": {
+      "enabled": false
+    }
+  },
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "minSdkVersion": 21,
+  "targetSdkVersion": 33
+}

@@ -10,7 +10,108 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
-export interface _SERVICE {}
+export type ApprovalStatus = { 'pending' : null } |
+  { 'approved' : null } |
+  { 'rejected' : null };
+export type ExternalBlob = Uint8Array;
+export interface PaymentProof {
+  'id' : PaymentProofId,
+  'status' : PaymentProofStatus,
+  'userId' : UserId,
+  'createdAt' : bigint,
+  'codeProof' : [] | [string],
+  'isFile' : boolean,
+  'fileProof' : [] | [ExternalBlob],
+}
+export type PaymentProofId = bigint;
+export type PaymentProofStatus = { 'pending' : null } |
+  { 'approved' : null } |
+  { 'rejected' : null };
+export interface PaymentProofUpdate {
+  'transactionCode' : [] | [string],
+  'isFile' : boolean,
+  'uploadFile' : [] | [ExternalBlob],
+}
+export type PaymentProofUpdateStatus = { 'error' : { 'message' : string } } |
+  {
+    'isInactiveOrRejected' : {
+      'message' : string,
+      'paymentProofId' : PaymentProofId,
+    }
+  } |
+  { 'success' : { 'paymentProofId' : PaymentProofId } };
+export interface UserApprovalInfo {
+  'status' : ApprovalStatus,
+  'principal' : Principal,
+}
+export type UserId = Principal;
+export interface UserProfile {
+  'activated' : boolean,
+  'name' : string,
+  'email' : string,
+  'enabled' : boolean,
+}
+export type UserRole = { 'admin' : null } |
+  { 'user' : null } |
+  { 'guest' : null };
+export interface _CaffeineStorageCreateCertificateResult {
+  'method' : string,
+  'blob_hash' : string,
+}
+export interface _CaffeineStorageRefillInformation {
+  'proposed_top_up_amount' : [] | [bigint],
+}
+export interface _CaffeineStorageRefillResult {
+  'success' : [] | [boolean],
+  'topped_up_amount' : [] | [bigint],
+}
+export interface _SERVICE {
+  '_caffeineStorageBlobIsLive' : ActorMethod<[Uint8Array], boolean>,
+  '_caffeineStorageBlobsToDelete' : ActorMethod<[], Array<Uint8Array>>,
+  '_caffeineStorageConfirmBlobDeletion' : ActorMethod<
+    [Array<Uint8Array>],
+    undefined
+  >,
+  '_caffeineStorageCreateCertificate' : ActorMethod<
+    [string],
+    _CaffeineStorageCreateCertificateResult
+  >,
+  '_caffeineStorageRefillCashier' : ActorMethod<
+    [[] | [_CaffeineStorageRefillInformation]],
+    _CaffeineStorageRefillResult
+  >,
+  '_caffeineStorageUpdateGatewayPrincipals' : ActorMethod<[], undefined>,
+  '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
+  'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
+  'getAllMyPaymentProofs' : ActorMethod<[], Array<PaymentProof>>,
+  'getAllPaymentProofs' : ActorMethod<[], Array<PaymentProof>>,
+  'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
+  'getCallerUserRole' : ActorMethod<[], UserRole>,
+  'getPaymentProof' : ActorMethod<[PaymentProofId], [] | [PaymentProof]>,
+  'getPaymentProofByStatus' : ActorMethod<
+    [PaymentProofStatus],
+    Array<PaymentProof>
+  >,
+  'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
+  'healthCheck' : ActorMethod<[], boolean>,
+  'isCallerAdmin' : ActorMethod<[], boolean>,
+  'isCallerApproved' : ActorMethod<[], boolean>,
+  'isPaywallActive' : ActorMethod<[], boolean>,
+  'isValidDocumentCode' : ActorMethod<[string], boolean>,
+  'listApprovals' : ActorMethod<[], Array<UserApprovalInfo>>,
+  'requestApproval' : ActorMethod<[], undefined>,
+  'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
+  'setApproval' : ActorMethod<[Principal, ApprovalStatus], undefined>,
+  'submitPaymentProof' : ActorMethod<[PaymentProofUpdate], bigint>,
+  'updatePaymentProof' : ActorMethod<
+    [PaymentProofId, PaymentProofUpdate],
+    PaymentProofUpdateStatus
+  >,
+  'updatePaymentProofStatusByAdmin' : ActorMethod<
+    [PaymentProofId, PaymentProofStatus],
+    undefined
+  >,
+}
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];
 export declare const idlFactory: IDL.InterfaceFactory;

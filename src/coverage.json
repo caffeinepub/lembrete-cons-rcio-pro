@@ -1,127 +1,164 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-17T13:07:56.355Z",
+  "generatedAt": "2026-02-17T23:09:29.070Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 6,
+    "total": 8,
     "implemented": 6,
     "items": [
       {
-        "id": "REQ-13",
-        "summary": "Add an offline-first CRM module to manage leads, persisted locally on the device (browser storage), separate from existing client/boleto items.",
+        "id": "REQ-37",
+        "summary": "Implement a backend user account system with email+password authentication, an activation (paid) flag, and an enabled/disabled flag so that access can be gated until payment is manually confirmed by an admin.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-38",
+        "summary": "Implement a paid-app gate in the frontend so that on first install/open the user can only see a single informational paywall screen until their account is activated by an admin.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/features/leads/storage/leadsStorage.ts",
-          "frontend/src/features/leads/hooks/useLeads.ts",
+          "frontend/src/features/access/AccessGate.tsx",
+          "frontend/src/features/auth/AuthScreen.tsx",
+          "frontend/src/features/auth/ProfileSetupForm.tsx",
+          "frontend/src/features/access/PaywallStatusScreen.tsx",
+          "frontend/src/features/access/hooks/useAccountGateState.ts",
           "frontend/src/App.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/features/leads/storage/leadsStorage.ts",
-          "frontend/src/features/leads/hooks/useLeads.ts",
+          "frontend/src/features/access/AccessGate.tsx",
+          "frontend/src/features/auth/AuthScreen.tsx",
+          "frontend/src/features/auth/ProfileSetupForm.tsx",
+          "frontend/src/features/access/PaywallStatusScreen.tsx",
+          "frontend/src/features/access/hooks/useAccountGateState.ts",
           "frontend/src/App.tsx"
         ]
       },
       {
-        "id": "REQ-14",
-        "summary": "Define a lead data model suitable for follow-up tracking, including at minimum: name, phone, notes, lead status, and next follow-up date/time.",
+        "id": "REQ-39",
+        "summary": "Create a paywall screen that displays Pix payment instructions and lets the user submit either a transaction code or an uploaded payment proof to be reviewed by an admin.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/features/leads/model/lead.ts",
-          "frontend/src/features/leads/components/LeadForm.tsx",
-          "frontend/src/features/leads/components/LeadDetails.tsx"
+          "frontend/src/features/paywall/PaywallScreen.tsx",
+          "frontend/src/features/paywall/hooks/usePaymentProofs.ts",
+          "frontend/src/features/access/PaywallStatusScreen.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/features/leads/model/lead.ts",
-          "frontend/src/features/leads/components/LeadForm.tsx",
-          "frontend/src/features/leads/components/LeadDetails.tsx"
+          "frontend/src/features/paywall/PaywallScreen.tsx",
+          "frontend/src/features/paywall/hooks/usePaymentProofs.ts",
+          "frontend/src/features/access/PaywallStatusScreen.tsx"
         ]
       },
       {
-        "id": "REQ-15",
-        "summary": "Provide a leads list view with fast filtering and sorting for follow-up work (e.g., overdue follow-ups, due today, upcoming, and no follow-up scheduled).",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/features/leads/utils/followUpBuckets.ts",
-          "frontend/src/features/leads/components/LeadsList.tsx",
-          "frontend/src/features/leads/components/LeadsModule.tsx",
-          "frontend/src/App.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/features/leads/utils/followUpBuckets.ts",
-          "frontend/src/features/leads/components/LeadsList.tsx",
-          "frontend/src/features/leads/components/LeadsModule.tsx",
-          "frontend/src/App.tsx"
-        ]
+        "id": "REQ-40",
+        "summary": "Add an admin-only backend API to list new registrations, review submitted payment proofs/transaction codes, and approve payment to activate accounts, as well as enable/disable users at any time.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
       },
       {
-        "id": "REQ-16",
-        "summary": "Add lead follow-up reminders that trigger when a lead’s follow-up date/time is reached, showing an in-app full-screen alert when the app is open, with actions to mark as done/reschedule (snooze).",
+        "id": "REQ-41",
+        "summary": "Add an admin panel UI in the frontend that is only visible to admin users and supports reviewing new signups, viewing payment submissions, approving payments (activating accounts), and enabling/disabling users.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/features/leads/reminders/useLeadReminders.ts",
-          "frontend/src/features/leads/components/LeadReminderOverlay.tsx",
-          "frontend/src/features/leads/utils/snoozeOptions.ts",
+          "frontend/src/features/admin/AdminPanel.tsx",
+          "frontend/src/features/admin/components/UserApprovalList.tsx",
+          "frontend/src/features/admin/components/PaymentProofReviewDrawer.tsx",
+          "frontend/src/features/admin/hooks/useAdminData.ts",
+          "frontend/src/features/settings/SettingsModule.tsx",
           "frontend/src/App.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/features/leads/reminders/useLeadReminders.ts",
-          "frontend/src/features/leads/components/LeadReminderOverlay.tsx",
-          "frontend/src/features/leads/utils/snoozeOptions.ts",
+          "frontend/src/features/admin/AdminPanel.tsx",
+          "frontend/src/features/admin/components/UserApprovalList.tsx",
+          "frontend/src/features/admin/components/PaymentProofReviewDrawer.tsx",
+          "frontend/src/features/admin/hooks/useAdminData.ts",
+          "frontend/src/features/settings/SettingsModule.tsx",
           "frontend/src/App.tsx"
         ]
       },
       {
-        "id": "REQ-17",
-        "summary": "Provide a direct WhatsApp action for each lead phone number that opens a WhatsApp chat using a deep link, consistent with existing WhatsApp behavior for clients.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/features/leads/utils/whatsapp.ts",
-          "frontend/src/features/leads/components/LeadsList.tsx",
-          "frontend/src/features/leads/components/LeadDetails.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/features/leads/utils/whatsapp.ts",
-          "frontend/src/features/leads/components/LeadsList.tsx",
-          "frontend/src/features/leads/components/LeadDetails.tsx"
-        ]
-      },
-      {
-        "id": "REQ-18",
-        "summary": "Integrate the Leads CRM UI into the existing navigation while keeping the app limited to a maximum of three main screens.",
+        "id": "REQ-42",
+        "summary": "Update frontend navigation so the app still uses no more than three main screens while supporting the new access gating and admin panel.",
         "status": "implemented",
         "plannedFiles": [
           "frontend/src/App.tsx",
-          "frontend/src/features/leads/components/LeadsModule.tsx"
+          "frontend/src/features/access/AccessGate.tsx"
         ],
         "matchedFiles": [
           "frontend/src/App.tsx",
-          "frontend/src/features/leads/components/LeadsModule.tsx"
+          "frontend/src/features/access/AccessGate.tsx"
+        ]
+      },
+      {
+        "id": "REQ-43",
+        "summary": "Ensure restricted access is enforced defensively: the frontend must gate UI, and the backend must enforce admin-only operations and user status checks where applicable.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/features/access/components/AccessErrorState.tsx",
+          "frontend/src/features/access/AccessGate.tsx",
+          "frontend/src/features/admin/AdminPanel.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/features/access/components/AccessErrorState.tsx",
+          "frontend/src/features/access/AccessGate.tsx",
+          "frontend/src/features/admin/AdminPanel.tsx"
+        ]
+      },
+      {
+        "id": "REQ-44",
+        "summary": "Add a configuration location in the frontend to manage Pix payment display values (price amount, Pix key, and instructions), so they can be changed without touching multiple UI components.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/config/pixPaywall.ts",
+          "frontend/src/features/paywall/PaywallScreen.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/config/pixPaywall.ts",
+          "frontend/src/features/paywall/PaywallScreen.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
+    "backend/authorization/MixinAuthorization.mo",
+    "backend/authorization/access-control.mo",
+    "backend/blob-storage/Mixin.mo",
+    "backend/blob-storage/Storage.mo",
+    "backend/main.mo",
+    "backend/user-approval/approval.mo",
     "build-request.json",
+    "caffeine.lock.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
     "frontend/src/App.tsx",
-    "frontend/src/features/leads/components/LeadDetails.tsx",
-    "frontend/src/features/leads/components/LeadForm.tsx",
-    "frontend/src/features/leads/components/LeadReminderOverlay.tsx",
-    "frontend/src/features/leads/components/LeadsList.tsx",
-    "frontend/src/features/leads/components/LeadsModule.tsx",
-    "frontend/src/features/leads/hooks/useLeads.ts",
-    "frontend/src/features/leads/model/lead.ts",
-    "frontend/src/features/leads/reminders/useLeadReminders.ts",
-    "frontend/src/features/leads/storage/leadsStorage.ts",
-    "frontend/src/features/leads/utils/followUpBuckets.ts",
-    "frontend/src/features/leads/utils/snoozeOptions.ts",
-    "frontend/src/features/leads/utils/whatsapp.ts",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/backend/types.ts",
+    "frontend/src/config/pixPaywall.ts",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/features/access/AccessGate.tsx",
+    "frontend/src/features/access/PaywallStatusScreen.tsx",
+    "frontend/src/features/access/components/AccessErrorState.tsx",
+    "frontend/src/features/access/hooks/useAccountGateState.ts",
+    "frontend/src/features/admin/AdminPanel.tsx",
+    "frontend/src/features/admin/components/PaymentProofReviewDrawer.tsx",
+    "frontend/src/features/admin/components/UserApprovalList.tsx",
+    "frontend/src/features/admin/hooks/useAdminData.ts",
+    "frontend/src/features/auth/AuthScreen.tsx",
+    "frontend/src/features/auth/ProfileSetupForm.tsx",
+    "frontend/src/features/paywall/PaywallScreen.tsx",
+    "frontend/src/features/paywall/hooks/usePaymentProofs.ts",
+    "frontend/src/features/settings/SettingsModule.tsx",
+    "frontend/src/hooks/useActor.ts",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/utils/urlParams.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

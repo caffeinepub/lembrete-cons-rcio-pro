@@ -1,4 +1,3 @@
-// List component with search, filters, and quick actions for leads
 import { useState, useMemo } from 'react';
 import { Search, Plus, MessageCircle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -41,26 +40,30 @@ export function LeadsList({ leads, onSelectLead, onCreateLead }: LeadsListProps)
 
   const formatFollowUpTime = (isoString?: string) => {
     if (!isoString) return null;
-    const date = new Date(isoString);
-    const now = new Date();
-    const diffMs = date.getTime() - now.getTime();
-    const diffMins = Math.floor(diffMs / 60000);
-    
-    if (diffMins < 0) {
-      const absMins = Math.abs(diffMins);
-      if (absMins < 60) return `${absMins}min atrás`;
-      const hours = Math.floor(absMins / 60);
-      if (hours < 24) return `${hours}h atrás`;
-      const days = Math.floor(hours / 24);
-      return `${days}d atrás`;
+    try {
+      const date = new Date(isoString);
+      const now = new Date();
+      const diffMs = date.getTime() - now.getTime();
+      const diffMins = Math.floor(diffMs / 60000);
+      
+      if (diffMins < 0) {
+        const absMins = Math.abs(diffMins);
+        if (absMins < 60) return `${absMins}min atrás`;
+        const hours = Math.floor(absMins / 60);
+        if (hours < 24) return `${hours}h atrás`;
+        const days = Math.floor(hours / 24);
+        return `${days}d atrás`;
+      }
+      
+      return date.toLocaleString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+    } catch {
+      return null;
     }
-    
-    return date.toLocaleString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
   };
 
   return (

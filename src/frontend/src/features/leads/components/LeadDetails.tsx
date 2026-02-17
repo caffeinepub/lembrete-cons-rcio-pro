@@ -1,5 +1,4 @@
-// Lead details and edit component with status management and WhatsApp integration
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MessageCircle, Edit, Trash2, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -9,6 +8,7 @@ import type { Lead } from '../model/lead';
 import { LEAD_STATUS_LABELS, LEAD_STATUS_COLORS } from '../model/lead';
 import { LeadForm } from './LeadForm';
 import { openWhatsApp } from '../utils/whatsapp';
+import { useLeadsContext } from '../context/LeadsContext';
 
 interface LeadDetailsProps {
   lead: Lead;
@@ -17,9 +17,13 @@ interface LeadDetailsProps {
   onClose: () => void;
 }
 
-export function LeadDetails({ lead, onUpdate, onDelete, onClose }: LeadDetailsProps) {
+export function LeadDetails({ lead: initialLead, onUpdate, onDelete, onClose }: LeadDetailsProps) {
+  const { leads } = useLeadsContext();
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+
+  // Always use the latest lead data from context
+  const lead = leads.find(l => l.id === initialLead.id) || initialLead;
 
   const handleSave = (data: Omit<Lead, 'id' | 'createdAt' | 'updatedAt'>) => {
     onUpdate(lead.id, data);
@@ -33,13 +37,17 @@ export function LeadDetails({ lead, onUpdate, onDelete, onClose }: LeadDetailsPr
 
   const formatDateTime = (isoString?: string) => {
     if (!isoString) return 'Não definido';
-    return new Date(isoString).toLocaleString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
+    try {
+      return new Date(isoString).toLocaleString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+    } catch {
+      return 'Data inválida';
+    }
   };
 
   if (isEditing) {

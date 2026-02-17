@@ -1,15 +1,14 @@
-// Main CRM module composing list, details, and creation flows
 import { useState } from 'react';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { LeadsList } from './LeadsList';
 import { LeadDetails } from './LeadDetails';
 import { LeadForm } from './LeadForm';
-import { useLeads } from '../hooks/useLeads';
+import { useLeadsContext } from '../context/LeadsContext';
 import type { Lead } from '../model/lead';
 
 export function LeadsModule() {
-  const { leads, createLead, updateLead, deleteLead } = useLeads();
+  const { leads, createLead, updateLead, deleteLead } = useLeadsContext();
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [isCreating, setIsCreating] = useState(false);
 
@@ -18,11 +17,17 @@ export function LeadsModule() {
     setIsCreating(false);
   };
 
+  const handleSelectLead = (lead: Lead) => {
+    // Always get fresh lead data from context
+    const freshLead = leads.find(l => l.id === lead.id);
+    setSelectedLead(freshLead || lead);
+  };
+
   return (
     <>
       <LeadsList
         leads={leads}
-        onSelectLead={setSelectedLead}
+        onSelectLead={handleSelectLead}
         onCreateLead={() => setIsCreating(true)}
       />
 

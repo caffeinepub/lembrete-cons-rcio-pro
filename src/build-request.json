@@ -1,123 +1,161 @@
 {
   "kind": "build_request",
-  "title": "Add offline CRM lead management with reminders",
+  "title": "Add restricted access with Pix paywall, user activation, and admin panel",
   "projectName": "Lembrete Consórcio Pro",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-13",
-      "text": "Add an offline-first CRM module to manage leads, persisted locally on the device (browser storage), separate from existing client/boleto items.",
-      "target": "frontend",
+      "id": "REQ-37",
+      "text": "Implement a backend user account system with email+password authentication, an activation (paid) flag, and an enabled/disabled flag so that access can be gated until payment is manually confirmed by an admin.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-4"
         ],
         "quotes": [
-          "quero adicionar a função de crm, controle de leads com lembretes"
+          "O aplicativo deve ter um sistema de acesso restrito... criar uma conta com e-mail e senha... O acesso completo ao sistema só será liberado após a confirmação de pagamento via Pix ao desenvolvedor."
         ]
       },
       "acceptanceCriteria": [
-        "User can create, edit, and delete lead records while offline and data remains after page refresh/reopen.",
-        "Leads are stored locally (no backend dependency required to use the CRM)."
+        "Backend exposes methods to: register a user (email+password), login (email+password), fetch current account status (active/paid/enabled), and logout client-side by clearing local session state.",
+        "User records persist across canister upgrades using stable storage.",
+        "Passwords are not stored in plaintext (store a salted hash).",
+        "Account status includes at least: paymentStatus (e.g., pending/approved), enabled (true/false), createdAt, and lastUpdatedAt."
       ]
     },
     {
-      "id": "REQ-14",
-      "text": "Define a lead data model suitable for follow-up tracking, including at minimum: name, phone, notes, lead status, and next follow-up date/time.",
+      "id": "REQ-38",
+      "text": "Implement a paid-app gate in the frontend so that on first install/open the user can only see a single informational paywall screen until their account is activated by an admin.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-4"
         ],
         "quotes": [
-          "quero adicionar a função de crm, controle de leads com lembretes"
+          "ao instalar o aplicativo, o usuário poderá visualizar apenas uma tela informativa explicando que o app é pago."
         ]
       },
       "acceptanceCriteria": [
-        "Lead create/edit form validates required fields (at least name and status) and allows setting an optional next follow-up date/time.",
-        "Lead status can be changed from the UI and is persisted locally."
+        "When the user is not logged in, the app shows only an authentication + paywall flow (no Dashboard/Leads functionality is reachable).",
+        "When the user is logged in but not payment-approved and/or disabled, the app shows only the paywall status screen (no internal features are reachable).",
+        "When the user is logged in AND payment-approved AND enabled, the normal app features (Dashboard, Leads, etc.) are accessible."
       ]
     },
     {
-      "id": "REQ-15",
-      "text": "Provide a leads list view with fast filtering and sorting for follow-up work (e.g., overdue follow-ups, due today, upcoming, and no follow-up scheduled).",
-      "target": "frontend",
+      "id": "REQ-39",
+      "text": "Create a paywall screen that displays Pix payment instructions and lets the user submit either a transaction code or an uploaded payment proof to be reviewed by an admin.",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-4"
         ],
         "quotes": [
-          "quero adicionar a função de crm, controle de leads com lembretes"
+          "Nessa tela deve conter o valor, a chave Pix para pagamento e um campo para o usuário enviar o comprovante ou informar o código da transação."
         ]
       },
       "acceptanceCriteria": [
-        "Leads can be viewed grouped or filtered by follow-up timing: Overdue, Due Today, Upcoming, and No Follow-up.",
-        "The list supports quick search by lead name and/or phone.",
-        "Tapping a lead opens the lead edit/details UI."
+        "Paywall screen displays: price amount, Pix key, and short instructions text (all user-facing text in English).",
+        "User can submit: (a) a transaction code string, and/or (b) an uploaded proof file (stored in backend as bytes or a base64 string).",
+        "Submission is associated with the logged-in user and is visible in the admin panel for review.",
+        "User sees a clear status after submission (e.g., “Pending review”, “Approved”, “Rejected/Disabled”)."
       ]
     },
     {
-      "id": "REQ-16",
-      "text": "Add lead follow-up reminders that trigger when a lead’s follow-up date/time is reached, showing an in-app full-screen alert when the app is open, with actions to mark as done/reschedule (snooze).",
-      "target": "frontend",
+      "id": "REQ-40",
+      "text": "Add an admin-only backend API to list new registrations, review submitted payment proofs/transaction codes, and approve payment to activate accounts, as well as enable/disable users at any time.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-4"
         ],
         "quotes": [
-          "quero adicionar a função de crm, controle de leads com lembretes"
+          "O aplicativo deve ter um painel administrativo onde o criador possa visualizar novos cadastros, confirmar pagamentos e ativar ou desativar usuários."
         ]
       },
       "acceptanceCriteria": [
-        "When the app is open and the follow-up time is reached (or overdue), the app shows a full-screen reminder for that lead.",
-        "The reminder provides actions to (1) mark the follow-up as completed (clearing or moving the next follow-up), and (2) snooze/reschedule by a selectable short interval and by 1 day.",
-        "Reminder actions persist locally and update the lead’s next follow-up state accordingly."
+        "Backend provides admin-only methods to: list users (filterable by pending payment), get a user’s payment submission details, approve payment (activates account), and set enabled/disabled status.",
+        "Non-admin callers cannot access admin-only methods (requests are rejected).",
+        "There is a defined bootstrap mechanism for establishing the initial admin identity (documented in code comments and enforced so it cannot be arbitrarily reset by non-admins)."
       ]
     },
     {
-      "id": "REQ-17",
-      "text": "Provide a direct WhatsApp action for each lead phone number that opens a WhatsApp chat using a deep link, consistent with existing WhatsApp behavior for clients.",
+      "id": "REQ-41",
+      "text": "Add an admin panel UI in the frontend that is only visible to admin users and supports reviewing new signups, viewing payment submissions, approving payments (activating accounts), and enabling/disabling users.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-4"
         ],
         "quotes": [
-          "quero adicionar a função de crm, controle de leads com lembretes"
+          "O aplicativo deve ter um painel administrativo... confirmar pagamentos e ativar ou desativar usuários."
         ]
       },
       "acceptanceCriteria": [
-        "From the lead list and/or lead details, the user can tap a WhatsApp button that opens a WhatsApp chat for the lead’s phone number."
+        "Admin panel is not visible to non-admin users.",
+        "Admin can view a list of users with status badges (e.g., Pending payment / Approved / Disabled).",
+        "Admin can open a user row to view submitted transaction code and/or proof attachment, then approve payment and/or toggle enabled/disabled.",
+        "All admin actions update UI state without requiring a full page refresh."
       ]
     },
     {
-      "id": "REQ-18",
-      "text": "Integrate the Leads CRM UI into the existing navigation while keeping the app limited to a maximum of three main screens.",
+      "id": "REQ-42",
+      "text": "Update frontend navigation so the app still uses no more than three main screens while supporting the new access gating and admin panel.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-4"
         ],
         "quotes": [
-          "quero adicionar a função de crm, controle de leads com lembretes"
+          "Enquanto o pagamento não for confirmado, o usuário não poderá acessar as funcionalidades internas do app"
         ]
       },
       "acceptanceCriteria": [
-        "The app still has no more than three main screens, with Leads accessible without adding a fourth top-level screen (e.g., via a segment/tab within an existing screen).",
-        "Leads creation/editing is reachable within the existing screen structure and works well on Android phone layouts."
+        "App keeps navigation to a maximum of three main screens when activated (e.g., Home/Dashboard, Leads, Settings).",
+        "Admin panel is integrated without adding a fourth main screen (e.g., as an admin-only section within Settings).",
+        "When gated (not logged in / not approved / disabled), navigation elements to internal modules are not shown or are disabled and cannot be accessed via URL/tab state."
+      ]
+    },
+    {
+      "id": "REQ-43",
+      "text": "Ensure restricted access is enforced defensively: the frontend must gate UI, and the backend must enforce admin-only operations and user status checks where applicable.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Frontend prevents access to internal modules unless account is approved+enabled (UI gating).",
+        "Backend rejects admin operations for non-admin callers.",
+        "Frontend shows actionable error messages (in English) for auth failures, network failures, and disabled/unapproved account states."
+      ]
+    },
+    {
+      "id": "REQ-44",
+      "text": "Add a configuration location in the frontend to manage Pix payment display values (price amount, Pix key, and instructions), so they can be changed without touching multiple UI components.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Pix price/key/instructions are defined in a single frontend config module (can reuse or extend existing branding config pattern).",
+        "Paywall screen reads from this centralized config.",
+        "No user-visible paywall strings are hardcoded across multiple components."
       ]
     }
   ],
   "constraints": [
-    "Keep all user-facing UI text in the app consistent with the existing pt-BR localization approach (do not introduce new English UI strings in the product UI).",
-    "Do not edit files under frontend/src/components/ui (compose existing UI components instead).",
-    "Do not modify any files listed as immutable in SYSTEM_CONTEXT.",
-    "Backend remains single-actor (backend/main.mo); only add backend methods if strictly required for this CRM feature (the CRM must work offline regardless)."
+    "Do not edit files in frontend immutablePaths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui.",
+    "Backend must remain a single Motoko actor in backend/main.mo; add backend/migration.mo only if stable state changes require migration.",
+    "Do not introduce third-party authentication providers (only custom auth and/or existing Internet Identity plumbing already present).",
+    "All user-facing text introduced/modified for these changes must be in English (even though the app previously used pt-BR)."
   ],
   "nonGoals": [
-    "Implementing multi-user, cloud sync, or cross-device synchronization for CRM leads.",
-    "Adding third-party CRM integrations or external databases.",
-    "Adding push notifications or background notifications (reminders only need to work when the app is open, consistent with existing reminder approach)."
+    "Automatic Pix payment verification or integration with banking/Pix APIs.",
+    "Push notifications, SMS, email sending, or any external messaging services for verification.",
+    "Replacing the existing offline local-storage data model for boletos/leads (keep existing offline persistence)."
   ],
   "imageRequirements": {
     "required": [],

@@ -1,4 +1,3 @@
-// Full-screen reminder overlay for due follow-ups with snooze and complete actions
 import { useState } from 'react';
 import { Clock, CheckCircle, Bell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -20,17 +19,23 @@ export function LeadReminderOverlay({ lead, onSnooze, onComplete }: LeadReminder
   const handleSnooze = () => {
     if (!selectedSnooze) return;
     const minutes = parseInt(selectedSnooze, 10);
+    if (isNaN(minutes) || minutes <= 0) return;
     onSnooze(minutes);
   };
 
-  const formatFollowUpTime = (isoString: string) => {
-    return new Date(isoString).toLocaleString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
+  const formatFollowUpTime = (isoString?: string) => {
+    if (!isoString) return 'Não definido';
+    try {
+      return new Date(isoString).toLocaleString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+    } catch {
+      return 'Data inválida';
+    }
   };
 
   return (

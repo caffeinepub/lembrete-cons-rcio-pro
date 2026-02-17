@@ -1,50 +1,86 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-17T13:07:56.351Z",
-  "summary": "Diff adds a new offline leads CRM feature set (model, localStorage persistence, CRUD UI with list/details/form, follow-up bucketing/search/sort, WhatsApp deep link, and an in-app full-screen reminder overlay) and integrates it into App navigation via a new tab. Most CRM functional requirements appear implemented, but there are concerns about the navigation constraint (max three main screens) and pt-BR UI string consistency.",
+  "generatedAt": "2026-02-17T23:09:29.065Z",
+  "summary": "The diff implements a Pix paywall UI flow, frontend access gating, and an admin UI for reviewing approvals/payment proofs. However, it does not implement the requested email+password backend account system with salted password hashing and stable persistence, and several backend account-status requirements (paymentStatus fields, timestamps, enable/disable APIs) are not evidenced in the provided backend diff. The diff also introduces an unrequested Internet Identity–based auth flow plus a secret admin-token bootstrap via URL/session parameters, and a separate user-approval workflow not specified in the BuildRequest.",
   "missing_requirements": [
     {
-      "id": "REQ-18",
-      "requirement": "Integrate the Leads CRM UI into the existing navigation while keeping the app limited to a maximum of three main screens (Leads accessible without adding a fourth top-level screen).",
-      "reason": "App navigation is modified to add a new top-level tab labeled \"Leads CRM\", which likely increases the count of main screens rather than embedding Leads within an existing screen (cannot confirm existing other main screens from truncated diff, but the change explicitly adds a new top-level destination).",
+      "id": "REQ-37",
+      "requirement": "Implement a backend user account system with email+password authentication, activation (paid) flag, enabled/disabled flag, stable persistence, salted password hashing, and account status fields including paymentStatus/createdAt/lastUpdatedAt; expose register/login/status methods.",
+      "reason": "Backend changes shown rely on Principal/AccessControl permissions and userProfiles (name/email/activated/enabled) rather than email+password authentication. No register/login methods or password hashing/salted storage are evidenced. Stable storage persistence across upgrades and lastUpdatedAt/paymentStatus fields are not evidenced in the shown backend snippet.",
       "evidence": [
-        "frontend/src/App.tsx"
+        "backend/main.mo (defines UserProfile with email/name/activated/enabled; uses AccessControl/UserApproval; no email+password register/login shown)"
       ]
     },
     {
-      "requirement": "Keep all user-facing UI text consistent with existing pt-BR localization approach (do not introduce new English UI strings in the product UI).",
-      "reason": "A new user-facing tab label \"Leads CRM\" introduces an English term (\"Leads\") in the product UI.",
+      "id": "REQ-40",
+      "requirement": "Add admin-only backend API to list users (filterable by pending payment), get a user’s payment submission details, approve payment (activates account), and set enabled/disabled status; include secure bootstrap mechanism for initial admin identity.",
+      "reason": "The diff shows admin-only approval APIs (listApprovals/setApproval) and payment proof submission types, but does not clearly evidence required user-list APIs, enable/disable APIs, or explicit account activation via payment approval. The bootstrap mechanism described in the request is not documented in backend comments in the provided snippet (only a secret-based initializer is invoked from frontend).",
       "evidence": [
-        "frontend/src/App.tsx"
+        "backend/main.mo (shows listApprovals/setApproval; shows submitPaymentProof; does not show listUsers/filter by pending payment or setEnabled/disabled methods in the provided truncated content)",
+        "frontend/src/hooks/useActor.ts (calls actor._initializeAccessControlWithSecret(adminToken), implying bootstrap exists but backend-side documentation/enforcement not evidenced here)"
+      ]
+    },
+    {
+      "id": "REQ-43",
+      "requirement": "Backend must enforce user status checks where applicable (approved+enabled) and reject admin operations for non-admin callers; frontend must show actionable English error messages for auth/network/disabled/unapproved states.",
+      "reason": "Admin-operation rejection is evidenced via Runtime.trap checks, and some frontend error UI exists, but backend enforcement of user approved+enabled gating for non-admin operations is not evidenced broadly (only paywall submission checks/permission checks are shown). Also some auth failure messaging for email+password cannot exist because that auth mode is not implemented.",
+      "evidence": [
+        "backend/main.mo (admin checks around setApproval/listApprovals; user permission checks in profile/proof methods; no general 'approved+enabled' gating shown in snippet)",
+        "frontend/src/features/access/components/AccessErrorState.tsx (network/disabled/unauthorized/pending messages in English)"
       ]
     }
   ],
   "hallucinated_features": [
     {
-      "description": "New full marketing/welcome dashboard copy and sections unrelated to the requested offline CRM leads management feature.",
-      "reason": "BuildRequest focuses on adding an offline CRM module with reminders and integrating it into navigation; the diff adds additional dashboard content/branding text that is not requested by REQ-13..REQ-18.",
+      "description": "Internet Identity–based login flow used as the primary authentication mechanism instead of the requested email+password authentication system.",
+      "reason": "BuildRequest explicitly requires email+password auth for the backend account system (REQ-37). The diff implements login via Internet Identity and uses Principal-based permissions.",
       "evidence": [
-        "frontend/src/App.tsx"
+        "frontend/src/features/auth/AuthScreen.tsx (\"Login with Internet Identity\")",
+        "frontend/src/features/access/hooks/useAccountGateState.ts (uses useInternetIdentity identity presence for auth gating)",
+        "backend/main.mo (UserId = Principal; AccessControl permission checks)"
+      ]
+    },
+    {
+      "description": "Secret admin-token bootstrap passed via URL/session parameter (caffeineAdminToken) and sent to backend initializer _initializeAccessControlWithSecret.",
+      "reason": "BuildRequest requires a bootstrap mechanism, but does not request a URL token mechanism or sessionStorage utilities for persisting a secret token parameter; this is an additional, specific implementation choice not asked for.",
+      "evidence": [
+        "frontend/src/hooks/useActor.ts (getSecretParameter('caffeineAdminToken'); calls actor._initializeAccessControlWithSecret(adminToken))",
+        "frontend/src/utils/urlParams.ts (sessionStorage persistence for URL parameters; comments mention admin tokens)"
+      ]
+    },
+    {
+      "description": "Separate user-approval workflow (requestApproval/listApprovals/setApproval) in addition to Pix payment approval/activation.",
+      "reason": "The requested admin workflow centers on paymentStatus and manual payment confirmation (REQ-37/REQ-40/REQ-39). The diff introduces an additional approval-state system (UserApproval) that is not explicitly requested.",
+      "evidence": [
+        "backend/main.mo (imports user-approval/approval; methods requestApproval, setApproval, listApprovals; isCallerApproved uses UserApproval)",
+        "frontend/src/features/admin/components/UserApprovalList.tsx (UI for \"User Approvals\" with pending/approved/rejected)"
       ]
     }
   ],
-  "confidence": 0.62,
+  "confidence": 0.66,
   "changed_files": [
+    "backend/main.mo",
     "frontend-file-summaries.txt",
     "frontend/src/App.tsx",
-    "frontend/src/features/leads/components/LeadDetails.tsx",
-    "frontend/src/features/leads/components/LeadForm.tsx",
-    "frontend/src/features/leads/components/LeadReminderOverlay.tsx",
-    "frontend/src/features/leads/components/LeadsList.tsx",
-    "frontend/src/features/leads/components/LeadsModule.tsx",
-    "frontend/src/features/leads/hooks/useLeads.ts",
-    "frontend/src/features/leads/model/lead.ts",
-    "frontend/src/features/leads/reminders/useLeadReminders.ts",
-    "frontend/src/features/leads/storage/leadsStorage.ts",
-    "frontend/src/features/leads/utils/followUpBuckets.ts",
-    "frontend/src/features/leads/utils/snoozeOptions.ts",
-    "frontend/src/features/leads/utils/whatsapp.ts",
+    "frontend/src/backend/types.ts",
+    "frontend/src/config/pixPaywall.ts",
+    "frontend/src/features/access/AccessGate.tsx",
+    "frontend/src/features/access/PaywallStatusScreen.tsx",
+    "frontend/src/features/access/components/AccessErrorState.tsx",
+    "frontend/src/features/access/hooks/useAccountGateState.ts",
+    "frontend/src/features/admin/AdminPanel.tsx",
+    "frontend/src/features/admin/components/PaymentProofReviewDrawer.tsx",
+    "frontend/src/features/admin/components/UserApprovalList.tsx",
+    "frontend/src/features/admin/hooks/useAdminData.ts",
+    "frontend/src/features/auth/AuthScreen.tsx",
+    "frontend/src/features/auth/ProfileSetupForm.tsx",
+    "frontend/src/features/paywall/PaywallScreen.tsx",
+    "frontend/src/features/paywall/hooks/usePaymentProofs.ts",
+    "frontend/src/features/settings/SettingsModule.tsx",
+    "frontend/src/hooks/useActor.ts",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/utils/urlParams.ts",
     "project_state.json"
   ]
 }

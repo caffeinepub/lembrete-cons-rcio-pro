@@ -8,10 +8,272 @@
 
 import { IDL } from '@icp-sdk/core/candid';
 
-export const idlService = IDL.Service({});
+export const _CaffeineStorageCreateCertificateResult = IDL.Record({
+  'method' : IDL.Text,
+  'blob_hash' : IDL.Text,
+});
+export const _CaffeineStorageRefillInformation = IDL.Record({
+  'proposed_top_up_amount' : IDL.Opt(IDL.Nat),
+});
+export const _CaffeineStorageRefillResult = IDL.Record({
+  'success' : IDL.Opt(IDL.Bool),
+  'topped_up_amount' : IDL.Opt(IDL.Nat),
+});
+export const UserRole = IDL.Variant({
+  'admin' : IDL.Null,
+  'user' : IDL.Null,
+  'guest' : IDL.Null,
+});
+export const PaymentProofId = IDL.Nat;
+export const PaymentProofStatus = IDL.Variant({
+  'pending' : IDL.Null,
+  'approved' : IDL.Null,
+  'rejected' : IDL.Null,
+});
+export const UserId = IDL.Principal;
+export const ExternalBlob = IDL.Vec(IDL.Nat8);
+export const PaymentProof = IDL.Record({
+  'id' : PaymentProofId,
+  'status' : PaymentProofStatus,
+  'userId' : UserId,
+  'createdAt' : IDL.Nat,
+  'codeProof' : IDL.Opt(IDL.Text),
+  'isFile' : IDL.Bool,
+  'fileProof' : IDL.Opt(ExternalBlob),
+});
+export const UserProfile = IDL.Record({
+  'activated' : IDL.Bool,
+  'name' : IDL.Text,
+  'email' : IDL.Text,
+  'enabled' : IDL.Bool,
+});
+export const ApprovalStatus = IDL.Variant({
+  'pending' : IDL.Null,
+  'approved' : IDL.Null,
+  'rejected' : IDL.Null,
+});
+export const UserApprovalInfo = IDL.Record({
+  'status' : ApprovalStatus,
+  'principal' : IDL.Principal,
+});
+export const PaymentProofUpdate = IDL.Record({
+  'transactionCode' : IDL.Opt(IDL.Text),
+  'isFile' : IDL.Bool,
+  'uploadFile' : IDL.Opt(ExternalBlob),
+});
+export const PaymentProofUpdateStatus = IDL.Variant({
+  'error' : IDL.Record({ 'message' : IDL.Text }),
+  'isInactiveOrRejected' : IDL.Record({
+    'message' : IDL.Text,
+    'paymentProofId' : PaymentProofId,
+  }),
+  'success' : IDL.Record({ 'paymentProofId' : PaymentProofId }),
+});
+
+export const idlService = IDL.Service({
+  '_caffeineStorageBlobIsLive' : IDL.Func(
+      [IDL.Vec(IDL.Nat8)],
+      [IDL.Bool],
+      ['query'],
+    ),
+  '_caffeineStorageBlobsToDelete' : IDL.Func(
+      [],
+      [IDL.Vec(IDL.Vec(IDL.Nat8))],
+      ['query'],
+    ),
+  '_caffeineStorageConfirmBlobDeletion' : IDL.Func(
+      [IDL.Vec(IDL.Vec(IDL.Nat8))],
+      [],
+      [],
+    ),
+  '_caffeineStorageCreateCertificate' : IDL.Func(
+      [IDL.Text],
+      [_CaffeineStorageCreateCertificateResult],
+      [],
+    ),
+  '_caffeineStorageRefillCashier' : IDL.Func(
+      [IDL.Opt(_CaffeineStorageRefillInformation)],
+      [_CaffeineStorageRefillResult],
+      [],
+    ),
+  '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
+  '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+  'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+  'getAllMyPaymentProofs' : IDL.Func([], [IDL.Vec(PaymentProof)], ['query']),
+  'getAllPaymentProofs' : IDL.Func([], [IDL.Vec(PaymentProof)], ['query']),
+  'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
+  'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+  'getPaymentProof' : IDL.Func(
+      [PaymentProofId],
+      [IDL.Opt(PaymentProof)],
+      ['query'],
+    ),
+  'getPaymentProofByStatus' : IDL.Func(
+      [PaymentProofStatus],
+      [IDL.Vec(PaymentProof)],
+      ['query'],
+    ),
+  'getUserProfile' : IDL.Func(
+      [IDL.Principal],
+      [IDL.Opt(UserProfile)],
+      ['query'],
+    ),
+  'healthCheck' : IDL.Func([], [IDL.Bool], ['query']),
+  'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+  'isCallerApproved' : IDL.Func([], [IDL.Bool], ['query']),
+  'isPaywallActive' : IDL.Func([], [IDL.Bool], ['query']),
+  'isValidDocumentCode' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
+  'listApprovals' : IDL.Func([], [IDL.Vec(UserApprovalInfo)], ['query']),
+  'requestApproval' : IDL.Func([], [], []),
+  'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+  'setApproval' : IDL.Func([IDL.Principal, ApprovalStatus], [], []),
+  'submitPaymentProof' : IDL.Func([PaymentProofUpdate], [IDL.Nat], []),
+  'updatePaymentProof' : IDL.Func(
+      [PaymentProofId, PaymentProofUpdate],
+      [PaymentProofUpdateStatus],
+      [],
+    ),
+  'updatePaymentProofStatusByAdmin' : IDL.Func(
+      [PaymentProofId, PaymentProofStatus],
+      [],
+      [],
+    ),
+});
 
 export const idlInitArgs = [];
 
-export const idlFactory = ({ IDL }) => { return IDL.Service({}); };
+export const idlFactory = ({ IDL }) => {
+  const _CaffeineStorageCreateCertificateResult = IDL.Record({
+    'method' : IDL.Text,
+    'blob_hash' : IDL.Text,
+  });
+  const _CaffeineStorageRefillInformation = IDL.Record({
+    'proposed_top_up_amount' : IDL.Opt(IDL.Nat),
+  });
+  const _CaffeineStorageRefillResult = IDL.Record({
+    'success' : IDL.Opt(IDL.Bool),
+    'topped_up_amount' : IDL.Opt(IDL.Nat),
+  });
+  const UserRole = IDL.Variant({
+    'admin' : IDL.Null,
+    'user' : IDL.Null,
+    'guest' : IDL.Null,
+  });
+  const PaymentProofId = IDL.Nat;
+  const PaymentProofStatus = IDL.Variant({
+    'pending' : IDL.Null,
+    'approved' : IDL.Null,
+    'rejected' : IDL.Null,
+  });
+  const UserId = IDL.Principal;
+  const ExternalBlob = IDL.Vec(IDL.Nat8);
+  const PaymentProof = IDL.Record({
+    'id' : PaymentProofId,
+    'status' : PaymentProofStatus,
+    'userId' : UserId,
+    'createdAt' : IDL.Nat,
+    'codeProof' : IDL.Opt(IDL.Text),
+    'isFile' : IDL.Bool,
+    'fileProof' : IDL.Opt(ExternalBlob),
+  });
+  const UserProfile = IDL.Record({
+    'activated' : IDL.Bool,
+    'name' : IDL.Text,
+    'email' : IDL.Text,
+    'enabled' : IDL.Bool,
+  });
+  const ApprovalStatus = IDL.Variant({
+    'pending' : IDL.Null,
+    'approved' : IDL.Null,
+    'rejected' : IDL.Null,
+  });
+  const UserApprovalInfo = IDL.Record({
+    'status' : ApprovalStatus,
+    'principal' : IDL.Principal,
+  });
+  const PaymentProofUpdate = IDL.Record({
+    'transactionCode' : IDL.Opt(IDL.Text),
+    'isFile' : IDL.Bool,
+    'uploadFile' : IDL.Opt(ExternalBlob),
+  });
+  const PaymentProofUpdateStatus = IDL.Variant({
+    'error' : IDL.Record({ 'message' : IDL.Text }),
+    'isInactiveOrRejected' : IDL.Record({
+      'message' : IDL.Text,
+      'paymentProofId' : PaymentProofId,
+    }),
+    'success' : IDL.Record({ 'paymentProofId' : PaymentProofId }),
+  });
+  
+  return IDL.Service({
+    '_caffeineStorageBlobIsLive' : IDL.Func(
+        [IDL.Vec(IDL.Nat8)],
+        [IDL.Bool],
+        ['query'],
+      ),
+    '_caffeineStorageBlobsToDelete' : IDL.Func(
+        [],
+        [IDL.Vec(IDL.Vec(IDL.Nat8))],
+        ['query'],
+      ),
+    '_caffeineStorageConfirmBlobDeletion' : IDL.Func(
+        [IDL.Vec(IDL.Vec(IDL.Nat8))],
+        [],
+        [],
+      ),
+    '_caffeineStorageCreateCertificate' : IDL.Func(
+        [IDL.Text],
+        [_CaffeineStorageCreateCertificateResult],
+        [],
+      ),
+    '_caffeineStorageRefillCashier' : IDL.Func(
+        [IDL.Opt(_CaffeineStorageRefillInformation)],
+        [_CaffeineStorageRefillResult],
+        [],
+      ),
+    '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
+    '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+    'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+    'getAllMyPaymentProofs' : IDL.Func([], [IDL.Vec(PaymentProof)], ['query']),
+    'getAllPaymentProofs' : IDL.Func([], [IDL.Vec(PaymentProof)], ['query']),
+    'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
+    'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+    'getPaymentProof' : IDL.Func(
+        [PaymentProofId],
+        [IDL.Opt(PaymentProof)],
+        ['query'],
+      ),
+    'getPaymentProofByStatus' : IDL.Func(
+        [PaymentProofStatus],
+        [IDL.Vec(PaymentProof)],
+        ['query'],
+      ),
+    'getUserProfile' : IDL.Func(
+        [IDL.Principal],
+        [IDL.Opt(UserProfile)],
+        ['query'],
+      ),
+    'healthCheck' : IDL.Func([], [IDL.Bool], ['query']),
+    'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+    'isCallerApproved' : IDL.Func([], [IDL.Bool], ['query']),
+    'isPaywallActive' : IDL.Func([], [IDL.Bool], ['query']),
+    'isValidDocumentCode' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
+    'listApprovals' : IDL.Func([], [IDL.Vec(UserApprovalInfo)], ['query']),
+    'requestApproval' : IDL.Func([], [], []),
+    'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+    'setApproval' : IDL.Func([IDL.Principal, ApprovalStatus], [], []),
+    'submitPaymentProof' : IDL.Func([PaymentProofUpdate], [IDL.Nat], []),
+    'updatePaymentProof' : IDL.Func(
+        [PaymentProofId, PaymentProofUpdate],
+        [PaymentProofUpdateStatus],
+        [],
+      ),
+    'updatePaymentProofStatusByAdmin' : IDL.Func(
+        [PaymentProofId, PaymentProofStatus],
+        [],
+        [],
+      ),
+  });
+};
 
 export const init = ({ IDL }) => { return []; };

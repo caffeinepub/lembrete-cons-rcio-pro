@@ -1,15 +1,37 @@
-// Local storage persistence for leads with dedicated key
 import type { Lead } from '../model/lead';
 
 const STORAGE_KEY = 'lembrete-consorcio-leads';
+
+function validateLead(lead: any): lead is Lead {
+  return (
+    lead &&
+    typeof lead === 'object' &&
+    typeof lead.id === 'string' &&
+    typeof lead.name === 'string' &&
+    typeof lead.status === 'string' &&
+    typeof lead.createdAt === 'string' &&
+    typeof lead.updatedAt === 'string'
+  );
+}
 
 export const leadsStorage = {
   getAll(): Lead[] {
     try {
       const data = localStorage.getItem(STORAGE_KEY);
-      return data ? JSON.parse(data) : [];
+      if (!data) return [];
+      
+      const parsed = JSON.parse(data);
+      if (!Array.isArray(parsed)) return [];
+      
+      // Validate and normalize each lead
+      return parsed.filter(validateLead).map(lead => ({
+        ...lead,
+        phone: lead.phone || '',
+        notes: lead.notes || '',
+        nextFollowUp: lead.nextFollowUp || undefined,
+      }));
     } catch (error) {
-      console.error('Error loading leads:', error);
+      console.error('Error loading leads from storage:', error);
       return [];
     }
   },
@@ -18,7 +40,7 @@ export const leadsStorage = {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(leads));
     } catch (error) {
-      console.error('Error saving leads:', error);
+      console.error('Error saving leads to storage:', error);
     }
   },
 
@@ -32,7 +54,7 @@ export const leadsStorage = {
     const leads = this.getAll();
     const index = leads.findIndex(l => l.id === id);
     if (index !== -1) {
-      leads[index] = { ...leads[index], ...updates, updatedAt: new Date().toISOString() };
+      leads[index] = { ...leads[index], ...updates };
       this.save(leads);
     }
   },

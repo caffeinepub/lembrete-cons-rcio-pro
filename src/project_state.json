@@ -1,18 +1,22 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 9,
-  "summary": "Android native offline reminder app for consórcio sellers to manage client boleto due dates, trigger full-screen alarm notifications, provide quick WhatsApp contact and simple dashboard, plus a simple offline CRM module to manage leads with reminders.",
+  "projectStateVersion": 27,
+  "summary": "Android reminder app for consórcio sellers with offline-first boleto reminders, WhatsApp shortcuts, dashboard, and simple offline CRM, now also requiring restricted access with user accounts and a paywall/activation flow via Pix payment confirmation by an admin (including an admin panel to manage users and activations).",
   "architectural_notes": [
     "Target platform: native Android, compatible with Android 8+",
     "Offline-first: no internet dependency; persistence via local SQLite database",
     "Reminder delivery requires full-screen notification and audible alarm with actionable options (sent/snooze hours/snooze 1 day)",
     "Navigation constraint: at most three main screens; optimized for fast use by external sellers",
-    "Branding/design constraint: Honda palette (#E60012 red, white, black); modern minimal UI with large buttons",
     "App language: Portuguese (pt-BR) should be the default UI language",
-    "Include a simple offline CRM (lead pipeline/lead list) with reminder/follow-up scheduling integrated into the existing reminder/notification system."
+    "Include a simple offline CRM (lead pipeline/lead list) with reminder/follow-up scheduling integrated into the existing reminder/notification system.",
+    "Provide an installable Android APK build artifact (release/signed) for user distribution/testing.",
+    "Branding/design must be neutral with no association to Honda (no name, colors, logos, or references).",
+    "User confirmed they want the downloadable APK file generated now (proceed with APK build artifact generation/publishing).",
+    "Restricted access/paywall flow implies identity + user activation state; app must block all internal screens until account is activated by admin after Pix payment confirmation."
   ],
   "known_issues": [
-    "Build/deployment process encountered an error during deployment (details not provided)."
+    "Build/deployment process encountered an error during deployment (details not provided).",
+    "Painel (Dashboard) não está funcionando corretamente (usuário pediu para que a parte de Painel também funcione)."
   ],
   "isFixRequest": false,
   "existing_features": [
@@ -159,6 +163,190 @@
         "REQ-18"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-audit-the-current-app-end-to-end-and-fix-any-broken-or-incomplete-flows-so-the-app-is-fully-functional-for-offline-usage-including-the-home-dashboard-area-the-leads-crm-module-create-edit-delete-search-filter-sort-whatsapp-deep-link-and-in-app-follow-up-reminders-overlay-snooze-complete-without-runtime-errors",
+      "title": "Audit the current app end-to-end and fix any broken or incomplete flows so the app is fully functional for offline usage, including: the Home/Dashboard area, the Leads CRM module (create/edit/delete, search/filter/sort, WhatsApp deep link), and in-app follow-up reminders (overlay + snooze/complete) without runtime errors.",
+      "reqIds": [
+        "REQ-19"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-an-android-installable-offline-web-app-experience-pwa-add-a-web-app-manifest-required-icons-and-an-offline-capable-service-worker-so-the-app-can-be-installed-from-a-mobile-browser-add-to-home-screen-and-continues-to-load-and-function-without-network-connectivity",
+      "title": "Implement an Android-installable offline web app experience (PWA): add a web app manifest, required icons, and an offline-capable service worker so the app can be installed from a mobile browser (Add to Home Screen) and continues to load and function without network connectivity.",
+      "reqIds": [
+        "REQ-20"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-remove-or-correct-any-misleading-backend-connectivity-indicators-by-implementing-a-real-backend-health-check-method-or-hiding-backend-status-if-the-backend-is-intentionally-unused-so-the-ui-reflects-the-true-operational-mode-of-the-app",
+      "title": "Remove or correct any misleading backend connectivity indicators by implementing a real backend health check method (or hiding backend status if the backend is intentionally unused), so the UI reflects the true operational mode of the app.",
+      "reqIds": [
+        "REQ-21"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-remove-all-explicit-mentions-of-the-brand-name-honda-from-user-visible-ui-text-including-but-not-limited-to-the-app-header-subtitle-currently-showing-sistema-de-lembretes-e-crm-para-cons-rcio-honda",
+      "title": "Remove all explicit mentions of the brand name \"Honda\" from user-visible UI text, including (but not limited to) the app header subtitle currently showing \"Sistema de Lembretes e CRM para Consórcio Honda\".",
+      "reqIds": [
+        "REQ-22"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-remove-honda-from-pwa-app-metadata-so-install-prompts-and-browser-metadata-do-not-reference-honda-e-g-html-meta-description-and-web-manifest-description",
+      "title": "Remove \"Honda\" from PWA/app metadata so install prompts and browser metadata do not reference Honda (e.g., HTML meta description and web manifest description).",
+      "reqIds": [
+        "REQ-23"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-replace-the-current-dashboard-painel-placeholder-content-in-frontend-src-app-tsx-with-the-real-home-dashboard-functionality-so-the-dashboard-works-end-to-end-offline-dashboard-metrics-due-date-grouped-list-actions",
+      "title": "Replace the current Dashboard (\"Painel\") placeholder content in `frontend/src/App.tsx` with the real Home/Dashboard functionality so the Dashboard works end-to-end offline (dashboard metrics + due-date grouped list + actions).",
+      "reqIds": [
+        "REQ-24"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-dashboard-reminder-behavior-for-client-boleto-due-dates-works-from-the-dashboard-flow-due-date-reminders-must-trigger-when-the-app-is-open-show-a-full-screen-in-app-alert-with-an-audible-alarm-and-provide-actions-to-mark-as-sent-and-snooze-hours-one-day",
+      "title": "Ensure Dashboard reminder behavior for client boleto due dates works from the Dashboard flow: due-date reminders must trigger when the app is open, show a full-screen in-app alert with an audible alarm, and provide actions to mark as Sent and snooze (hours / one day).",
+      "reqIds": [
+        "REQ-25"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-restore-ensure-navigation-from-the-dashboard-flow-to-client-add-edit-so-users-can-create-edit-and-delete-client-boleto-entries-from-the-dashboard-area-while-keeping-navigation-limited-to-a-maximum-of-three-main-screens-home-dashboard-client-add-edit-settings-backup",
+      "title": "Restore/ensure navigation from the Dashboard flow to Client Add/Edit so users can create, edit, and delete client boleto entries from the Dashboard area while keeping navigation limited to a maximum of three main screens (Home/Dashboard, Client Add/Edit, Settings/Backup).",
+      "reqIds": [
+        "REQ-26"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-an-android-apk-packaging-setup-that-wraps-the-existing-deployed-pwa-as-an-installable-android-app-android-8-producing-a-debug-apk-and-a-signed-release-apk",
+      "title": "Add an Android APK packaging setup that wraps the existing deployed PWA as an installable Android app (Android 8+), producing a debug APK and a signed release APK.",
+      "reqIds": [
+        "REQ-27"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-pwa-is-compatible-with-apk-wrapping-requirements-by-providing-any-required-static-association-files-and-metadata-needed-for-android-trusted-web-app-webview-packaging-served-as-static-assets-from-the-frontend-build-output",
+      "title": "Ensure the PWA is compatible with APK wrapping requirements by providing any required static association files and metadata needed for Android trusted web app / webview packaging (served as static assets from the frontend build output).",
+      "reqIds": [
+        "REQ-28"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-clear-step-by-step-documentation-in-the-repository-explaining-how-to-generate-the-debug-apk-and-the-signed-release-apk-including-required-prerequisites-and-commands",
+      "title": "Add clear, step-by-step documentation in the repository explaining how to generate the debug APK and the signed release APK, including required prerequisites and commands.",
+      "reqIds": [
+        "REQ-29"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-verify-that-the-wrapped-apk-preserves-the-current-app-s-core-behavior-offline-first-loading-local-data-persistence-and-whatsapp-deep-links-with-no-new-mandatory-online-dependencies-introduced-by-the-apk-wrapper",
+      "title": "Verify that the wrapped APK preserves the current app’s core behavior: offline-first loading, local data persistence, and WhatsApp deep links, with no new mandatory online dependencies introduced by the APK wrapper.",
+      "reqIds": [
+        "REQ-30"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-generate-android-apk-build-artifacts-for-download-at-minimum-a-debug-apk-and-a-signed-release-apk-when-signing-inputs-are-provided-using-the-existing-bubblewrap-twa-wrapper-setup-under-frontend-android",
+      "title": "Generate Android APK build artifacts for download (at minimum a debug APK, and a signed release APK when signing inputs are provided) using the existing Bubblewrap/TWA wrapper setup under `frontend/android/`.",
+      "reqIds": [
+        "REQ-31"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-if-the-android-wrapper-configuration-still-contains-placeholders-add-explicit-validation-error-messaging-in-the-apk-build-flow-documentation-to-block-release-builds-until-required-values-are-set-e-g-the-deployed-pwa-host-in-frontend-android-twa-manifest-json-and-the-sha-256-fingerprint-in-frontend-public-well-known-assetlinks-json",
+      "title": "If the Android wrapper configuration still contains placeholders, add explicit validation/error messaging in the APK build flow/documentation to block release builds until required values are set (e.g., the deployed PWA host in `frontend/android/twa-manifest.json` and the SHA-256 fingerprint in `frontend/public/.well-known/assetlinks.json`).",
+      "reqIds": [
+        "REQ-32"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-generate-a-downloadable-debug-apk-using-the-existing-bubblewrap-twa-wrapper-under-frontend-android-by-running-the-repository-s-apk-build-flow-and-publish-the-resulting-apk-artifact-s-as-build-outputs-for-download",
+      "title": "Generate a downloadable Debug APK using the existing Bubblewrap/TWA wrapper under `frontend/android/` by running the repository’s APK build flow, and publish the resulting `.apk` artifact(s) as build outputs for download.",
+      "reqIds": [
+        "REQ-33"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-if-valid-release-signing-inputs-are-present-generate-and-publish-a-signed-release-apk-otherwise-skip-the-release-build-and-ensure-the-build-output-clearly-states-why-it-was-skipped-and-what-must-be-configured-to-enable-it",
+      "title": "If valid release signing inputs are present, generate and publish a signed Release APK; otherwise, skip the release build and ensure the build output clearly states why it was skipped and what must be configured to enable it.",
+      "reqIds": [
+        "REQ-34"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-run-the-existing-android-apk-build-flow-and-publish-the-resulting-apk-artifact-s-for-download-always-generate-the-debug-apk-and-generate-the-signed-release-apk-only-when-valid-signing-inputs-are-present",
+      "title": "Run the existing Android APK build flow and publish the resulting APK artifact(s) for download: always generate the Debug APK, and generate the signed Release APK only when valid signing inputs are present.",
+      "reqIds": [
+        "REQ-35"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-paid-app-gate-in-the-frontend-so-that-on-first-install-open-the-user-can-only-see-a-single-informational-paywall-screen-until-their-account-is-activated-by-an-admin",
+      "title": "Implement a paid-app gate in the frontend so that on first install/open the user can only see a single informational paywall screen until their account is activated by an admin.",
+      "reqIds": [
+        "REQ-38"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-paywall-screen-that-displays-pix-payment-instructions-and-lets-the-user-submit-either-a-transaction-code-or-an-uploaded-payment-proof-to-be-reviewed-by-an-admin",
+      "title": "Create a paywall screen that displays Pix payment instructions and lets the user submit either a transaction code or an uploaded payment proof to be reviewed by an admin.",
+      "reqIds": [
+        "REQ-39"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-an-admin-panel-ui-in-the-frontend-that-is-only-visible-to-admin-users-and-supports-reviewing-new-signups-viewing-payment-submissions-approving-payments-activating-accounts-and-enabling-disabling-users",
+      "title": "Add an admin panel UI in the frontend that is only visible to admin users and supports reviewing new signups, viewing payment submissions, approving payments (activating accounts), and enabling/disabling users.",
+      "reqIds": [
+        "REQ-41"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-frontend-navigation-so-the-app-still-uses-no-more-than-three-main-screens-while-supporting-the-new-access-gating-and-admin-panel",
+      "title": "Update frontend navigation so the app still uses no more than three main screens while supporting the new access gating and admin panel.",
+      "reqIds": [
+        "REQ-42"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-restricted-access-is-enforced-defensively-the-frontend-must-gate-ui-and-the-backend-must-enforce-admin-only-operations-and-user-status-checks-where-applicable",
+      "title": "Ensure restricted access is enforced defensively: the frontend must gate UI, and the backend must enforce admin-only operations and user status checks where applicable.",
+      "reqIds": [
+        "REQ-43"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-configuration-location-in-the-frontend-to-manage-pix-payment-display-values-price-amount-pix-key-and-instructions-so-they-can-be-changed-without-touching-multiple-ui-components",
+      "title": "Add a configuration location in the frontend to manage Pix payment display values (price amount, Pix key, and instructions), so they can be changed without touching multiple UI components.",
+      "reqIds": [
+        "REQ-44"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -205,12 +393,6 @@
       "status": "pending"
     },
     {
-      "id": "AR-8",
-      "summary": "UI design: Honda colors (red #E60012, white, black), modern minimal layout, large buttons, simple navigation with max three main screens",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
       "id": "AR-9",
       "summary": "Localize the app UI to Portuguese (pt-BR) as the default language",
       "reqIds": [],
@@ -220,6 +402,48 @@
       "id": "AR-10",
       "summary": "Add an offline CRM feature: lead management (controle de leads) with reminders/follow-up alerts",
       "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-11",
+      "summary": "Generate a releasable Android APK (signed) for installation/distribution and ensure the app is fully working end-to-end",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-12",
+      "summary": "Remove any Honda branding/mentions and use neutral, non-affiliated visual identity (colors, text, assets)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-13",
+      "summary": "Run the existing Android APK packaging workflow and publish the resulting APK artifact(s) for the user to download on an Android device: always generate the Debug APK, and generate the signed Release APK only when valid signing inputs are present.",
+      "reqIds": [
+        "REQ-36"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-14",
+      "summary": "Add restricted access system: user accounts (email+password or admin-provisioned login), paid-app info screen with Pix payment instructions + proof/transaction code submission, manual admin confirmation to activate account, and an admin panel to approve payments and enable/disable users; block all app features until activated",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-15",
+      "summary": "Implement a backend user account system with email+password authentication, an activation (paid) flag, and an enabled/disabled flag so that access can be gated until payment is manually confirmed by an admin.",
+      "reqIds": [
+        "REQ-37"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-18",
+      "summary": "Add an admin-only backend API to list new registrations, review submitted payment proofs/transaction codes, and approve payment to activate accounts, as well as enable/disable users at any time.",
+      "reqIds": [
+        "REQ-40"
+      ],
       "status": "pending"
     }
   ],
